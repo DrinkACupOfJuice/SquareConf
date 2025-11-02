@@ -1,0 +1,150 @@
+/* 侧边栏样式 - 新增 flex 布局垂直分布控制 */
+.sidebar {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid #ccc;
+  padding: 12px;
+  background: #fff;
+  height: 100%; /* 占满容器高度，确保 auto margin 生效 */
+}
+
+/* 设置按钮 - 新增 margin-top: auto 顶到下方 */
+.setting-btn {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.1s;
+  margin-top: auto;
+}
+
+/* 基础样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  color: #000; /* 全局文字设为黑色 */
+}
+
+body {
+  background: #fff; /* 页面背景白色 */
+  line-height: 1.5;
+}
+
+/* 容器布局 */
+.container {
+  display: flex;
+  width: 80vw;
+  height: 80vh;
+  background: #fff; /* 容器背景白色 */
+}
+
+/* 历史对话面板 */
+.history-panel {
+  border: 1px solid #ccc;
+  flex-shrink: 0;
+  background: #fff; /* 面板背景白色 */
+}
+
+.panel-header {
+  padding: 8px 12px;
+  border-bottom: 1px solid #ccc;
+}
+
+.collapse-btn {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 0;
+  transition: background 0.1s;
+}
+.collapse-btn:active {
+  background: #ccc; /* 点击时变灰 */
+}
+
+.panel-content {
+  padding: 8px 0;
+}
+
+.dialog-list {
+  list-style: none;
+}
+
+.dialog-list li {
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.1s;
+}
+.dialog-list li.active {
+  background: #f0f0f0;
+}
+.dialog-list li:active {
+  background: #ccc; /* 点击对话项变灰 */
+}
+
+/* 主内容区域 */
+.main-area {
+  flex: 1;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* 消息区域 */
+.message-area {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* 输入区域 - 核心调整 */
+.input-section {
+  display: flex;
+  flex-direction: row; /* 强制横向排列 */
+  gap: 10px; /* 统一元素间距 */
+  align-items: center; /* 垂直居中对齐 */
+  padding: 15px 20px;
+  border-top: 1px solid #ccc;
+  width: 100%;
+  height: 60%;
+  box-sizing: border-box;
+}
+
+/* 按钮容器 - 确保两个按钮在同一子容器内 */
+.button-group {
+  display: flex;
+  gap: 10px; /* 按钮之间的间距 */
+  align-items: center;
+}
+
+.attach-btn, .send-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  height: 36px; /* 固定高度，确保对齐 */
+  white-space: nowrap; /* 防止按钮文字换行 */
+}
+
+.input-box {
+  flex: 1; /* 输入框占据中间所有空间 */
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  background: #fff;
+  box-sizing: border-box;
+}
