@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import './home.css';
 
 // 定义对话类型
@@ -11,6 +12,11 @@ const Home: React.FC = () => {
   // 状态管理
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [activeDialogId, setActiveDialogId] = useState<string>('1');
+  // 设置按钮点击处理
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate('/manager');
+  };
   
   // 对话列表数据
   const dialogs: Dialog[] = [
@@ -65,7 +71,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* 设置按钮 */}
-        <button className="setting-btn">设置</button>
+        <button className="setting-btn" onClick={handleClick}>设置</button>
       </aside>
 
       {/* 主内容区域 */}
