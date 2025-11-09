@@ -5,12 +5,38 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* 全局居中（仅控制子元素居中，自身高度由内容或子元素撑满） */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh; /* 强制占满视口高度 */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%; /* 继承 :root 高度 */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 页面容器统一样式（适配全局布局） */
+.page-container {
+  width: 100%;
+  max-width: 1440px; /* 限制最大宽度，避免大屏拉伸 */
+  flex: 1; /* 占满剩余高度 */
+  max-height: 900px; /* 限制最大高度，避免长屏拉伸 */
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 a {
@@ -20,14 +46,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -64,5 +82,15 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+/* 适配移动端 */
+@media (max-width: 768px) {
+  :root {
+    padding: 0 8px;
+  }
+  .page-container {
+    max-height: calc(100vh - 16px);
   }
 }

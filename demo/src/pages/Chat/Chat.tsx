@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './chat.css';
+import Sidebar from '../../components/Sidebar/Sidebar'; // 引入Sidebar组件
+
+// 定义对话类型（与Sidebar组件一致）
+interface Dialog {
+  id: string;
+  title: string;
+}
+
+  // 对话列表数据（传递给Sidebar组件）
+  const dialogs: Dialog[] = [
+    { id: '1', title: '对话1' },
+    { id: '2', title: '对话2' },
+    { id: '3', title: '对话3' },
+  ];
 
 // 消息类型接口（新增时间、思考时间、token数字段）
 interface Message {
@@ -156,6 +170,8 @@ const Chat: React.FC = () => {
   };
 
   return (
+    <div className="container">
+      <Sidebar dialogs={dialogs} />
     <div className="chat-container">
       {/* 消息列表区域 */}
       <div className="message-list">
@@ -181,8 +197,7 @@ const Chat: React.FC = () => {
         ))}
       </div>
 
-      {/* 输入区域 */}
-      <div className="input-section">
+      <div>
         <button className="rating-btn" onClick={openRating}>
           评价一下本次使用如何
         </button>
@@ -241,6 +256,7 @@ const Chat: React.FC = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
