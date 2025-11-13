@@ -1,0 +1,32 @@
+.file-uploader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: auto;
+}
+
+/* 文件预览样式，可选，不影响按钮样式 */
+.file-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9f9f9;
+  font-size: 14px;
+}
+
+.file-preview button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background: #ff4d4f;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.file-preview button:hover {
+  background: #d9363e;
+}
