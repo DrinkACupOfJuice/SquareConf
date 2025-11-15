@@ -1,32 +1,66 @@
 .file-uploader {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: auto;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
 }
 
-/* 文件预览样式，可选，不影响按钮样式 */
+.attach-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4299e1;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+}
+
+.attach-btn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.attach-btn:hover:not(:disabled) {
+  background-color: #3182ce;
+}
+
 .file-preview {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f9f9f9;
-  font-size: 14px;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background-color: #f8fafc;
 }
 
-.file-preview button {
+.file-name {
+  color: #1e293b;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.delete-btn {
   padding: 4px 8px;
   border: none;
   border-radius: 4px;
-  background: #ff4d4f;
-  color: #fff;
+  background-color: #ef4444;
+  color: white;
   cursor: pointer;
-  font-size: 12px;
+  transition: background-color 0.2s;
 }
 
-.file-preview button:hover {
-  background: #d9363e;
+.delete-btn:hover {
+  background-color: #dc2626;
+}
+
+.upload-error {
+  color: #ef4444;
+  font-size: 14px;
+  margin-left: 8px;
 }
