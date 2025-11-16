@@ -109,6 +109,17 @@
   border: 1px solid #ccc;
   border-radius: 8px;
 }
+.tools-row {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 评价按钮与上传组件间距 */
+  margin-bottom: 10px;
+}
+
+.uploader-wrapper {
+  display: flex;
+  align-items: center;
+}
 
 /* 评价弹窗 */
 .rating-modal {

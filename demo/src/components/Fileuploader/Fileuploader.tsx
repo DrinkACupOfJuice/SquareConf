@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { uploadFile, deleteFile, UploadFileResponse } from '../../api/api'; // 引入类型定义
+import { uploadFile, deleteFile, UploadFileResponse } from '../../api/Fileapi'; // 引入类型定义
 import './FileUploader.css';
 
 // 定义上传成功后的文件类型（与接口返回匹配）

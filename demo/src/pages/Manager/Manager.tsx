@@ -72,6 +72,9 @@ const Manager: React.FC = () => {
           <button className="setting-btn">
             评价
           </button>
+          <button className="setting-btn" onClick={() => navigate("/knowledge-base")}>
+            知识库管理
+          </button>
         </aside>
 
         {/* 右侧评价展示区域 */}

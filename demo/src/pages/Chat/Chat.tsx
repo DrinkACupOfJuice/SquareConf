@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './chat.css';
+import FileUploader from '../../components/Fileuploader/Fileuploader';
 import Sidebar from '../../components/Sidebar/Sidebar'; // 引入Sidebar组件
 
 // 定义对话类型（与Sidebar组件一致）
@@ -201,6 +202,9 @@ const Chat: React.FC = () => {
         <button className="rating-btn" onClick={openRating}>
           评价一下本次使用如何
         </button>
+         <div className="uploader-wrapper">
+            <FileUploader />
+          </div>
         <div className="input-row">
           <input
             type="text"
