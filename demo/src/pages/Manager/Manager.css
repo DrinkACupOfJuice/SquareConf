@@ -1,145 +1,218 @@
-/* 基础样式重置 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: sans-serif;
-  color: #000;
-}
-
-body {
-  background: #fff;
-  line-height: 1.5;
-}
-
-/* 容器布局 */
+/* ===== 布局整体 ===== */
 .container {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  background: #fff; /* 容器背景白色 */
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background: #f7f7f7;
+    overflow: hidden;
 }
 
-/* 页面容器 */
-.manager-container {
-  display: flex;
-  height: 90vh;
-  border: 1px solid #ccc;
-  margin: 0 auto;
-  width: 90%;
-}
-
-/* 左侧侧边栏 */
-.sidebar {
-  width: 180px;
-  border-right: 1px solid #ccc;
-  background: #fff;
-}
-
-.menu-item {
-  padding: 12px 20px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.menu-item.active {
-  background: #f0f0f0;
-}
-
-/* 右侧主区域 */
+/* ===== 主区域（玻璃拟态） ===== */
 .main-area {
-  flex: 1;
-  padding: 40px;
-  background: #fff;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    height: 100%;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(16px);
+    border-radius: 24px 0 0 24px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    opacity: 0;
+    animation: mainFadeIn 0.8s ease forwards;
 }
 
-/* 顶部栏：搜索 + 平均得分 */
+@keyframes mainFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===== 顶部搜索 + 平均分 ===== */
 .top-bar {
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .search-area {
-  width: 300px;
+    flex: 1 1 300px;
 }
 
 .search-input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  background: #fff;
+    width: 100%;
+    padding: 10px 18px;
+    border: 1px solid #d6d6d6;
+    border-radius: 24px;
+    font-size: 14px;
+    background: #fafafa;
+    outline: none;
+    transition: 0.25s ease;
 }
 
-.average-score {
-  font-size: 16px;
+.search-input:focus {
+    border-color: #1677ff;
+    background: #fff;
+    box-shadow: 0 0 6px rgba(22, 119, 255, 0.3);
 }
 
+.average-score-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.85);
+    opacity: 0;
+    animation: circlePop 0.6s ease forwards;
+}
+
+@keyframes circlePop {
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.average-circle {
+    width: 54px;
+    height: 54px;
+}
+
+.bg-circle {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 4;
+}
+
+.progress-circle {
+    fill: none;
+    stroke: #409eff;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transform-origin: 50% 50%;
+    stroke-dashoffset: var(--initOffset, 200);
+    animation: progressAnim 1s ease forwards;
+}
+
+@keyframes progressAnim {
+    from {
+        stroke-dashoffset: var(--initOffset);
+    }
+
+    to {
+        stroke-dashoffset: var(--targetOffset);
+    }
+}
+
+.average-text {
+    font-size: 12px;
+    color: #333;
+    margin-top: 4px;
+    text-align: center;
+}
+
+/* ===== 标题 ===== */
 .section-title {
-  font-size: 18px;
-  margin-bottom: 30px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  text-align: center;
-  width: 100%;
-  max-width: 800px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 18px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
 }
 
-/* 评价列表 */
+/* ===== 卡片列表 ===== */
 .rating-list {
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex: 1;
 }
 
 .rating-item {
-  border: 1px solid #ccc;
-  padding: 15px;
+    border-radius: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease;
+    transform: translateY(10px);
+    opacity: 0;
+    animation: cardFadeUp 0.55s ease forwards;
+    animation-delay: calc(var(--i, 0) * 0.12s);
+}
+
+@keyframes cardFadeUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.rating-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15),
+        0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
 .rating-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-/* 新增评价元信息样式 */
+.rating-score {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #fff;
+}
+
 .rating-meta {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.rating-time {
-  color: #666;
+    font-size: 12px;
+    color: #777;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
 }
 
 .rating-comment {
-  text-align: center;
-  font-size: 14px;
-  line-height: 1.6;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
 }
 
-.setting-btn {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  background: none;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.1s;
+/* ===== 滚动条 ===== */
+.main-area::-webkit-scrollbar {
+    width: 8px;
 }
-.setting-btn:active {
-  background: #ccc; /* 保持与其他按钮一致的点击效果 */
+
+.main-area::-webkit-scrollbar-thumb {
+    background: #cfcfcf;
+    border-radius: 4px;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+    .main-area {
+        padding: 16px;
+    }
+
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-area {
+        width: 100%;
+        margin-bottom: 12px;
+    }
 }

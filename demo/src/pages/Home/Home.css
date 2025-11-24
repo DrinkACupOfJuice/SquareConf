@@ -1,131 +1,92 @@
-/* 基础样式重置 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: sans-serif;
-  color: #000; /* 全局文字设为黑色 */
-}
-
-body {
-  background: #fff; /* 页面背景白色 */
-  line-height: 1.5;
-}
-
-/* 容器布局 */
+/* 使用 container 类统一布局，和 Manager/KBManager 一致 */
 .container {
   display: flex;
   width: 100%;
-  height: 100vh;
-  background: #fff; /* 容器背景白色 */
-}
-
-/* 历史对话面板 */
-.history-panel {
-  border: 1px solid #ccc;
-  flex-shrink: 0;
-  height: 80%;
-  background: #fff; /* 面板背景白色 */
-}
-
-.panel-header {
-  padding: 8px 12px;
-  border-bottom: 1px solid #ccc;
-}
-
-.collapse-btn {
-  width: 100%;
-  text-align: left;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 4px 0;
-  transition: background 0.1s;
-}
-.collapse-btn:active {
-  background: #ccc; /* 点击时变灰 */
-}
-
-.panel-content {
-  padding: 8px 0;
-}
-
-.dialog-list {
-  list-style: none;
-}
-
-.dialog-list li {
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.1s;
-}
-.dialog-list li.active {
-  background: #f0f0f0;
-}
-.dialog-list li:active {
-  background: #ccc; /* 点击对话项变灰 */
-}
-
-/* 主内容区域 */
-.main-area {
-  flex: 1;
-  border: 1px solid #ccc;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  overflow: hidden;
-}
-
-/* 消息区域 */
-.message-area {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.input-section {
-  display: flex;
-  flex-direction: column; /* 改为垂直排列 */
-  gap: 10px; /* 行间距 */
-  align-items: stretch; /* 子元素拉伸占满宽度 */
-  padding: 15px 20px;
-  width: 100%;
   height: 100%;
-  box-sizing: border-box;
+  gap: 20px;
+  padding: 10px;
+  background: #f7f8fa;
 }
 
-.input-box {
-  flex: 0 0 50%; /* 输入框占50%高度 */
-  padding: 8px 12px; /* 上内边距8px，确保文字贴近顶部 */
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  width: 100%;
-  background: #fff;
-  box-sizing: border-box;
-  text-align: left;
-  vertical-align: top;
-  /* resize: vertical; */
-  /* min-height: 100px; */
-}
-
-/* 按钮容器 - 水平排列 */
-.button-group {
+/* 主区 */
+.home-main {
+  flex: 1;
   display: flex;
-  gap: 10px; /* 按钮之间的间距 */
+  justify-content: center;
+  /* 输入框居中 */
   align-items: center;
-  justify-content: flex-end;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.attach-btn, .send-btn {
-  padding: 8px 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: none;
+/* 输入框容器 */
+.home-input-wrapper {
+  position: relative;
+  width: 600px;
+  min-height: 120px;
+  padding: 18px 20px 52px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+/* 文本输入框 */
+.home-input-box {
+  width: 100%;
+  min-height: 80px;
+  max-height: 220px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #e3e3e3;
+  background: #fafafa;
+  outline: none;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #222;
+  resize: none;
+  overflow-y: auto;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.home-input-box:focus {
+  border-color: #b5b5b5;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.08);
+}
+
+/* 底部按钮 */
+.home-btns {
+  position: absolute;
+  left: 0;
+  bottom: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+/* 上传按钮和发送按钮样式 */
+.home-btn .attach-btn,
+.home-btn .home-send-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #dadada;
+  background: #fcfcfc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 15px;
   cursor: pointer;
-  font-size: 14px;
-  height: 36px; /* 固定高度，确保对齐 */
-  white-space: nowrap; /* 防止按钮文字换行 */
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.home-btn .attach-btn:hover,
+.home-btn .home-send-btn:hover {
+  background: #f0f0f0;
+  border-color: #c5c5c5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }

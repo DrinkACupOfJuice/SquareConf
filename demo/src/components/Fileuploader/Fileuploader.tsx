@@ -97,7 +97,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
         onClick={handleAttachClick} 
         disabled={uploading}
       >
-        {uploading ? '📤 上传中...' : '📎 发送附件'}
+        {uploading ? '📤' : '+'}
       </button>
 
       {/* 错误提示（新增） */}

@@ -1,118 +1,109 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './manager.css';
+import { useLocation } from 'react-router-dom';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import './Manager.css';
 
-// 评价数据接口（新增所用时间和token数字段）
 interface Rating {
   id: string;
   score: number;
   comment: string;
   createdAt: string;
-  usedTime: number; // 所用时间（秒，保留1位小数）
-  tokenCount: number; // 调用token数
+  usedTime: number;
+  tokenCount: number;
 }
 
 const Manager: React.FC = () => {
-  const navigate = useNavigate();
-  // 模拟历史评价数据（新增usedTime和tokenCount字段）
+  const location = useLocation();
   const [ratings] = useState<Rating[]>([
-    {
-      id: '1',
-      score: 85,
-      comment: '功能很实用，操作也比较流畅，希望能增加更多自定义选项。',
-      createdAt: '2025-10-28 14:30:00',
-      usedTime: 1.2,
-      tokenCount: 38
-    },
-    {
-      id: '2',
-      score: 92,
-      comment: '体验非常好，响应速度快，界面简洁明了，值得推荐。',
-      createdAt: '2025-10-27 09:15:00',
-      usedTime: 0.8,
-      tokenCount: 29
-    },
-    {
-      id: '3',
-      score: 70,
-      comment: '整体还不错，但是偶尔会有卡顿，希望优化性能。',
-      createdAt: '2025-10-26 16:45:00',
-      usedTime: 1.5,
-      tokenCount: 32
-    }
+    { id: '1', score: 85, comment: '功能很实用，操作流畅。', createdAt: '2025-10-28 14:30:00', usedTime: 1.2, tokenCount: 38 },
+    { id: '2', score: 92, comment: '体验非常好，界面简洁。', createdAt: '2025-10-27 09:15:00', usedTime: 0.8, tokenCount: 29 },
+    { id: '3', score: 70, comment: '整体不错，但偶尔卡顿。', createdAt: '2025-10-26 16:45:00', usedTime: 1.5, tokenCount: 32 },
+    { id: '4', score: 60, comment: '功能较少，期待更多更新。', createdAt: '2025-10-25 11:20:00', usedTime: 2.0, tokenCount: 45 },
+    { id: '5', score: 95, comment: '非常满意，推荐给朋友使用！', createdAt: '2025-10-24 13:10:00', usedTime: 0.5, tokenCount: 25 },
   ]);
 
-  // 计算平均得分
-  const averageScore = ratings.reduce((sum, item) => sum + item.score, 0) / ratings.length;
-
-  // 搜索状态
   const [searchValue, setSearchValue] = useState('');
+  const averageScore = ratings.reduce((sum, r) => sum + r.score, 0) / ratings.length;
+  const radius = 20;
+  const circumference = 2 * Math.PI * radius;
+  const percent = Math.min(Math.max(averageScore / 100, 0), 1);
+  const offset = circumference * (1 - percent);
 
-  // 过滤评价（新增按所用时间、token数搜索）
-  const filteredRatings = ratings.filter(rating => 
-    rating.comment.includes(searchValue) || 
-    rating.createdAt.includes(searchValue) || 
+  const filteredRatings = ratings.filter(rating =>
+    rating.comment.toLowerCase().includes(searchValue.toLowerCase()) ||
+    rating.createdAt.includes(searchValue) ||
     rating.score.toString().includes(searchValue) ||
-    rating.usedTime.toString().includes(searchValue) || // 按所用时间搜索
-    rating.tokenCount.toString().includes(searchValue) // 按token数搜索
+    rating.usedTime.toString().includes(searchValue) ||
+    rating.tokenCount.toString().includes(searchValue)
   );
 
-  const goHome = () => {
-    navigate('/Home');
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return '#4caf50';
+    if (score >= 80) return '#8bc34a';
+    if (score >= 70) return '#ffb74d';
+    return '#f44336';
   };
 
   return (
     <div className="container">
-      <div className="manager-container">
-        {/* 左侧导航栏 */}
-        <aside className="sidebar">
-          <button className="setting-btn" onClick={goHome}>
-            首页
-          </button>
-          <button className="setting-btn">
-            评价
-          </button>
-          <button className="setting-btn" onClick={() => navigate("/knowledge-base")}>
-            知识库管理
-          </button>
-        </aside>
+      <Sidebar activeKey={location.pathname} />
 
-        {/* 右侧评价展示区域 */}
-        <main className="main-area">
-          {/* 右上角搜索 + 平均得分 */}
-          <div className="top-bar">
-            <div className="search-area">
-              <input
-                type="text"
-                placeholder="搜索评价、时间、token数..." // 更新占位提示
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                className="search-input"
+      <main className="main-area">
+        <div className="top-bar">
+          <div className="search-area">
+            <input
+              type="text"
+              placeholder="搜索评价、时间、token数..."
+              value={searchValue}
+              onChange={e => setSearchValue(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          <div className="average-score-wrapper">
+            <svg className="average-circle" width="50" height="50">
+              <circle className="bg-circle" cx="25" cy="25" r={radius} />
+              <circle
+                className="progress-circle"
+                cx="25"
+                cy="25"
+                r={radius}
+                strokeDasharray={circumference}
+                strokeDashoffset={offset}
+                style={{
+                  ['--initOffset' as any]: circumference,
+                  ['--targetOffset' as any]: offset,
+                }}
               />
-            </div>
-            <div className="average-score">
-              平均得分：{averageScore.toFixed(1)} 分
-            </div>
+              <text x="25" y="30" textAnchor="middle" fontSize="12" fill="#333">
+                {averageScore.toFixed(1)}
+              </text>
+            </svg>
+            <div className="average-text">平均得分</div>
           </div>
+        </div>
 
-          <h2 className="section-title">历史评价列表</h2>
-          <div className="rating-list">
-            {filteredRatings.map((rating) => (
-              <div key={rating.id} className="rating-item">
-                <div className="rating-header">
-                  <span className="rating-score">{rating.score} 分</span>
-                  <span className="rating-time">{rating.createdAt}</span>
-                </div>
-                {/* 新增所用时间和token数展示 */}
-                <div className="rating-meta">
-                  所用时间：{rating.usedTime.toFixed(1)}s • 调用token：{rating.tokenCount}
-                </div>
-                <div className="rating-comment">{rating.comment}</div>
+        <h2 className="section-title">历史评价列表</h2>
+        <div className="rating-list">
+          {filteredRatings.map((rating, index) => (
+            <div
+              key={rating.id}
+              className="rating-item"
+              style={{ '--i': index } as React.CSSProperties}
+            >
+              <div className="rating-header">
+                <span className="rating-score" style={{ backgroundColor: getScoreColor(rating.score) }}>
+                  {rating.score} 分
+                </span>
+                <span className="rating-time">{rating.createdAt}</span>
               </div>
-            ))}
-          </div>
-        </main>
-      </div>
+              <div className="rating-meta">
+                所用时间：{rating.usedTime.toFixed(1)}s • 调用token：{rating.tokenCount}
+              </div>
+              <div className="rating-comment">{rating.comment}</div>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   );
 };
