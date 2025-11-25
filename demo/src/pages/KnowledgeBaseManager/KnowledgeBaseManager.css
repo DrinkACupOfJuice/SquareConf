@@ -98,15 +98,20 @@
   }
 }
 
-/* ===== 折叠区域按钮区 ===== */
+/* ===== 折叠区域按钮区（改写） ===== */
 .kb-actions {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
+  /* 防止按钮溢出 */
 }
 
 .upload-btn,
-.kb-actions .setting-btn,
-.file-item .setting-btn {
+.kb-actions .setting-btn {
+  min-width: 100px;
+  /* 保证按钮不太小 */
+  max-width: 140px;
+  /* 防止删除按钮过长撑满整行 */
   padding: 6px 12px;
   border-radius: 12px;
   font-size: 13px;
@@ -114,6 +119,13 @@
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(8px);
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: all 0.25s ease;
 }
 
@@ -122,8 +134,7 @@
 }
 
 .upload-btn:hover,
-.kb-actions .setting-btn:hover,
-.file-item .setting-btn:hover {
+.kb-actions .setting-btn:hover {
   background: rgba(22, 119, 255, 0.15);
   border-color: rgba(22, 119, 255, 0.3);
   transform: translateY(-2px);
@@ -132,7 +143,7 @@
 /* 删除按钮红色版（仅在折叠区域） */
 .setting-btn.danger {
   background: rgba(255, 77, 79, 0.2);
-  border-color: rgba(255, 77, 79, 0.35);
+  border-color: rgba(255, 77, 79, 0.35);;
 }
 
 .setting-btn.danger:hover {
