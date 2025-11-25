@@ -1,5 +1,5 @@
+/* 侧边栏基础样式 */
 .sidebar {
-  width: 200px;
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 16px;
@@ -9,18 +9,100 @@
   flex-direction: column;
   padding: 20px;
   gap: 12px;
+  transition: width 0.3s ease, padding 0.3s ease, align-items 0.3s ease;
+  position: relative;
 }
 
-/* 导航按钮 */
+/* 展开状态 */
+.sidebar.expanded {
+  width: 200px;
+  align-items: flex-start;
+}
+
+/* 收起状态 - 固定宽度+按钮尺寸统一 */
+.sidebar.collapsed {
+  width: 60px;
+  padding: 20px 10px;
+  align-items: center;
+}
+
+/* 侧边栏收起/展开按钮 */
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #1677ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.sidebar-toggle-btn:hover {
+  background: #1677ff;
+  color: white;
+}
+
+/* 导航按钮容器 */
+.nav-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* 导航按钮 - 收起/展开时尺寸统一 */
 .setting-btn {
-  padding: 10px 16px;
+  padding: 12px; /* 固定内边距，确保收起/展开时按钮高度一致 */
   border: none;
   background: none;
   font-size: 14px;
   cursor: pointer;
-  text-align: left;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px; /* 固定高度，确保所有按钮尺寸一致 */
+}
+
+/* 收起时：图标居中，隐藏文字，保持按钮尺寸 */
+.sidebar.collapsed .setting-btn {
+  justify-content: center;
+  gap: 0;
+  padding: 12px; /* 与展开时一致的内边距 */
+  height: 44px; /* 固定高度，确保大小统一 */
+}
+
+.setting-btn .btn-icon {
+  font-size: 18px; /* 固定图标大小 */
+  display: inline-block;
+  width: 20px; /* 固定图标宽度，确保对齐 */
+  height: 20px;
+  text-align: center;
+}
+
+.setting-btn .btn-text {
+  transition: all 0.3s ease;
+}
+
+/* 收起时：文字完全隐藏 */
+.sidebar.collapsed .setting-btn .btn-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 .setting-btn:hover {
@@ -38,39 +120,59 @@
   margin-top: 12px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .panel-header {
   margin-bottom: 6px;
+  width: 100%;
 }
 
+/* 历史对话按钮 - 与导航按钮尺寸统一 */
 .collapse-btn {
   width: 100%;
-  padding: 8px 12px;
+  padding: 12px; /* 与导航按钮一致的内边距 */
   font-size: 13px;
   text-align: left;
   border: none;
   background: rgba(22, 119, 255, 0.08);
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   position: relative;
   transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px; /* 固定高度，与导航按钮尺寸一致 */
+}
+
+/* 收起时：隐藏文字，保持按钮尺寸 */
+.sidebar.collapsed .panel-title {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.collapse-btn:disabled {
+  background: rgba(22, 119, 255, 0.03);
+  cursor: not-allowed;
+  color: #ccc;
 }
 
 .collapse-btn::after {
   content: '▼';
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: static;
+  margin-left: auto;
   transition: transform 0.3s ease;
+  font-size: 14px;
 }
 
 .collapse-btn[aria-expanded="false"]::after {
-  transform: translateY(-50%) rotate(-180deg);
+  transform: rotate(-180deg);
 }
 
-.collapse-btn:hover {
+.collapse-btn:not(:disabled):hover {
   background: rgba(22, 119, 255, 0.15);
 }
 
@@ -89,22 +191,21 @@
 }
 
 .dialog-list li {
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(6px);
   cursor: pointer;
   font-size: 14px;
   color: #333;
-  transition: none;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-}
-
-.dialog-list.ready li {
   transition: all 0.25s ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  height: 44px; /* 列表项也与按钮尺寸统一 */
+  display: flex;
+  align-items: center;
 }
 
-.dialog-list.ready li:hover {
+.dialog-list li:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.35);
 }
@@ -114,4 +215,8 @@
   color: #1677ff;
   font-weight: 500;
   box-shadow: inset 0 0 0 1px rgba(22, 119, 255, 0.15);
+}
+
+.sidebar.collapsed .dialog-list {
+  display: none;
 }

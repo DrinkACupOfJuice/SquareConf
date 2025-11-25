@@ -143,10 +143,6 @@
   box-sizing: border-box;
 }
 
-.chat-input-container {
-  width: 100% !important;
-}
-
 .chat-input-wrapper {
   border: 1px solid #ccc;
 }
