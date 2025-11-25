@@ -77,3 +77,9 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
+/* ======= 关键新增：仅 Home 页面生效的 chat-input-container 样式 ======= */
+/* 利用 home-main 作为页面专属类（Home 页面独有的容器类），限定样式作用域 */
+.home-main .chat-input-container {
+  max-width: 800px; /* 仅 Home 页面限制最大宽度 */
+  margin: 0 auto; /* 可选：让输入框水平居中，更美观 */
+}
