@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './chat.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import ChatInput from '../../components/Chatinput/Chatinput';
+import RatingModal from '../../components/RatingModal/RatingModal';
 import FileUploader from '../../components/Fileuploader/Fileuploader';
 
 // 定义对话类型（与Sidebar组件一致）
@@ -51,7 +52,7 @@ const Chat: React.FC = () => {
   const [scoreError, setScoreError] = useState('');
   const [inputValue, setInputValue] = useState(''); // 新增inputValue状态
   const chatInputRef = useRef<{ setInput: (value: string) => void } | null>(null);
-  
+
   // 关键：创建滚动容器的ref
   const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -89,12 +90,12 @@ const Chat: React.FC = () => {
       setTimeout(() => {
         let aiContent = '';
         let tokenCount = 0;
-        
+
         // 1. 有文件上传场景
         if (hasFile) {
           aiContent = '我已收到你上传的文件！支持的操作包括：解析文本内容、提取关键信息、格式转换（如PDF转Word）、数据统计等。请告诉我你的具体需求，我会为你处理～';
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } 
+        }
         // 2. 功能使用相关
         else if (userContent.includes('使用') || userContent.includes('怎么') || userContent.includes('如何')) {
           if (userContent.includes('文件') || userContent.includes('上传')) {
@@ -107,17 +108,17 @@ const Chat: React.FC = () => {
             aiContent = '你可以通过输入框发送消息与我互动，支持文本提问、文件上传、多轮对话。点击"评价一下本次使用如何"可提交反馈，发送后我会及时回复你～';
           }
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } 
+        }
         // 3. 评分评价相关
         else if (userContent.includes('评分') || userContent.includes('评价') || userContent.includes('反馈')) {
           aiContent = '评分范围是1-100分，点击输入框上方的"评价一下本次使用如何"即可打开评价弹窗。你可以输入分数并填写详细反馈，我们会根据你的建议持续优化产品～';
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } 
+        }
         // 4. 产品功能咨询
         else if (userContent.includes('功能') || userContent.includes('能做什么') || userContent.includes('支持')) {
           aiContent = '本工具支持以下功能：\n1. 文本问答（各类问题咨询、知识查询）\n2. 文件处理（解析、转换、数据提取）\n3. 多轮对话（连续追问、上下文理解）\n4. 快速操作（预设问题、快捷指令）\n5. 反馈评价（提交使用体验和建议）\n你可以告诉我具体需求，我会为你提供对应服务～';
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } 
+        }
         // 5. 问题咨询场景
         else if (userContent.includes('问') || userContent.includes('什么') || userContent.includes('？') || userContent.includes('吗')) {
           if (userContent.includes('天气') || userContent.includes('温度')) {
@@ -132,7 +133,7 @@ const Chat: React.FC = () => {
             aiContent = '感谢你的提问！我已记录你的问题，相关解答如下：\n由于这是通用问答场景，如果你有具体的问题细节（如文件处理需求、功能使用疑问等），可以详细说明，我会为你提供更精准的回复～';
           }
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } 
+        }
         // 6. 感谢/告别场景
         else if (userContent.includes('谢谢') || userContent.includes('感谢') || userContent.includes('再见') || userContent.includes('拜拜')) {
           const thanksReplies = [
@@ -143,7 +144,7 @@ const Chat: React.FC = () => {
           ];
           aiContent = thanksReplies[Math.floor(Math.random() * thanksReplies.length)];
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } 
+        }
         // 7. 吐槽/建议场景
         else if (userContent.includes('不好用') || userContent.includes('垃圾') || userContent.includes('建议') || userContent.includes('优化')) {
           if (userContent.includes('不好用') || userContent.includes('垃圾')) {
@@ -152,7 +153,7 @@ const Chat: React.FC = () => {
             aiContent = '非常感谢你的宝贵建议！我们已经记录下来，会在后续版本中进行优化。如果有更具体的改进方向，也可以详细说明，你的建议对我们很重要～';
           }
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } 
+        }
         // 8. 其他通用场景
         else {
           const generalReplies = [
@@ -173,7 +174,28 @@ const Chat: React.FC = () => {
       }, thinkingTime);
     });
   };
+  // 打字机效果逐字显示 AI 回复
+  const typeWriterAI = (fullText: string, thinkingTime: number = 0, tokenCount: number = 0) => {
+    const aiId = `resp-${Date.now()}`;
+    // 插入占位消息
+    setMessages(prev => [
+      ...prev,
+      { id: aiId, sender: 'assistant', content: '', time: formatTime(new Date()), thinkingTime, tokenCount }
+    ]);
 
+    let index = 0;
+    const interval = 30; // 每 30ms 打印一个字符
+    const timer = setInterval(() => {
+      setMessages(prev => prev.map(msg => {
+        if (msg.id === aiId) {
+          return { ...msg, content: fullText.slice(0, index + 1) };
+        }
+        return msg;
+      }));
+      index++;
+      if (index >= fullText.length) clearInterval(timer);
+    }, interval);
+  };
   // 消息发送逻辑（适配两种输入方式）
   const handleSend = async (inputVal?: string, uploadedFile?: { id?: string; name?: string; url?: string } | null) => {
     // 兼容ChatInput和原生输入框
@@ -181,11 +203,11 @@ const Chat: React.FC = () => {
     if (!userContent && !uploadedFile) return;
 
     const hasFile = !!uploadedFile;
-    
+
     // 拼接文件信息
     if (hasFile) {
-      userContent = userContent 
-        ? `${userContent}\n📄 上传文件：${uploadedFile?.name}` 
+      userContent = userContent
+        ? `${userContent}\n📄 上传文件：${uploadedFile?.name}`
         : `📄 上传文件：${uploadedFile?.name}`;
     }
 
@@ -198,23 +220,15 @@ const Chat: React.FC = () => {
       file: uploadedFile || undefined
     };
     setMessages(prev => [...prev, userMessage]);
-    
+
     // 清空原生输入框
     if (!inputVal) setInputValue('');
 
     // AI回复
     const aiResponse = await simulateAIChat(userContent, hasFile);
-    const aiMessage: Message = {
-      id: `resp-${Date.now()}`,
-      sender: 'assistant',
-      content: aiResponse.content,
-      time: formatTime(new Date()),
-      thinkingTime: aiResponse.thinkingTime,
-      tokenCount: aiResponse.tokenCount
-    };
-    setMessages(prev => [...prev, aiMessage]);
+    // 使用打字机效果显示 AI 回复
+    typeWriterAI(aiResponse.content, aiResponse.thinkingTime, aiResponse.tokenCount);
   };
-
   // 评价相关方法
   const openRating = () => {
     setIsRatingOpen(true);
@@ -237,7 +251,7 @@ const Chat: React.FC = () => {
       setScoreError('请输入1-100之间的数字');
       return;
     }
-    
+
     console.log('提交评价：', { 评分: num, 详细评价: ratingComment });
     closeRating();
 
@@ -256,25 +270,18 @@ const Chat: React.FC = () => {
   return (
     <div className="container">
       <Sidebar dialogs={dialogs} activeKey="/chat" />
-      
+
       <div className="chat-container">
         <div className="message-list">
           {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`message ${msg.sender}`}
-            >
-              <div className="avatar"></div>
+            <div key={msg.id} className={`message ${msg.sender}`}>
+              {/* <div className="avatar"></div> */} {/* 移除头像 */}
               <div className="bubble">
                 <div className="bubble-content">{msg.content}</div>
                 <div className="bubble-meta">
-                  {msg.time}
-                  {/* AI消息额外显示思考时间和token数 */}
-                  {msg.sender === 'assistant' && (
-                    <span className="ai-meta">
-                      • 思考{msg.thinkingTime?.toFixed(1)}s • 调用{msg.tokenCount}token
-                    </span>
-                  )}
+                  {msg.sender === 'assistant'
+                    ? `思考${msg.thinkingTime?.toFixed(1)}s • 调用${msg.tokenCount}token`
+                    : msg.time}
                 </div>
               </div>
             </div>
@@ -291,59 +298,31 @@ const Chat: React.FC = () => {
             quickActions={[
               { label: '快速提问', onClick: () => chatInputRef.current?.setInput('请介绍一下核心功能') },
               { label: '文件咨询', onClick: () => chatInputRef.current?.setInput('请解析这个文件的内容') },
-              { 
-                label: '评价一下本次使用如何', 
-                onClick: openRating, 
+              {
+                label: '评价一下本次使用如何',
+                onClick: openRating,
               }
             ]}
           />
         </div>
+        <RatingModal
+          isOpen={isRatingOpen}
+          onClose={() => setIsRatingOpen(false)}
+          onSubmit={(score, comment) => {
+            console.log('评分：', score, '详细评价：', comment);
 
-        {isRatingOpen && (
-          <div className="rating-modal">
-            <div className="modal-content">
-              <button className="close-btn" onClick={closeRating}>×</button>
-              <h3 className="modal-title">请评价本次使用</h3>
+            const aiMessage: Message = {
+              id: `resp-${Date.now()}`,
+              sender: 'assistant',   // <-- 这里 TS 已认定为 "assistant" 字面量 OK
+              content: '感谢你的宝贵评价！我们会根据你的反馈持续优化产品体验～',
+              time: formatTime(new Date()),
+              thinkingTime: 0.5,
+              tokenCount: 15
+            };
 
-              {/* 评分输入 */}
-              <div className="rating-input-group">
-                <label className="rating-label">评分(1-100)：</label>
-                <input
-                  type="text"
-                  className={`rating-input ${scoreError ? 'error' : ''}`}
-                  placeholder="输入1-100的数字"
-                  value={ratingScore}
-                  onChange={(e) => setRatingScore(e.target.value.replace(/[^\d]/g, ''))}
-                  onKeyPress={(e) => e.key === 'Enter' && submitRating()}
-                />
-                {scoreError && <div className="error-message">{scoreError}</div>}
-              </div>
-
-              {/* 详细评价输入（带字符计数和自动高度） */}
-              <div className="comment-input-group">
-                <label className="comment-label">详细评价（可选）：</label>
-                <textarea
-                  className="comment-input"
-                  placeholder="请输入您的详细评价(最多500字)"
-                  value={ratingComment}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 500) setRatingComment(e.target.value);
-                    // 自动调整高度
-                    const target = e.target;
-                    target.style.height = 'auto';
-                    target.style.height = target.scrollHeight + 'px';
-                  }}
-                ></textarea>
-                <div className="comment-count">{ratingComment.length}/500</div>
-              </div>
-
-              <div className="modal-actions">
-                <button className="cancel-btn" onClick={closeRating}>取消</button>
-                <button className="submit-btn" onClick={submitRating}>提交</button>
-              </div>
-            </div>
-          </div>
-        )}
+            setMessages(prev => [...prev, aiMessage]);
+          }}
+        />
       </div>
     </div>
   );

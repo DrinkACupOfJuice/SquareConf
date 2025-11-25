@@ -1,0 +1,179 @@
+/* 弹窗遮罩 */
+.rm-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    animation: rm-fadeIn 0.2s ease;
+}
+
+/* 弹窗内容容器 */
+.rm-modal-content {
+    background: #ffffff;
+    width: 480px;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: rm-popupIn 0.25s ease;
+}
+
+/* 弹窗标题 */
+.rm-modal-title {
+    margin: 0 0 16px 0;
+    font-size: 19px;
+    font-weight: 600;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+/* 关闭按钮 */
+.rm-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 22px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #777;
+    transition: 0.2s;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.rm-close-btn:hover {
+    color: #000;
+    background: #f5f5f5;
+}
+
+/* 评分输入区域 */
+.rm-rating-input-group {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rm-rating-label {
+    font-size: 14px;
+    color: #444;
+    flex-shrink: 0;
+}
+
+.rm-rating-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1.5px solid #dcdfe6;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.rm-rating-input.error {
+    border-color: #e74c3c;
+}
+
+.rm-error-message {
+    font-size: 12px;
+    color: #e74c3c;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    margin-left: 70px;
+}
+
+/* 详细评价区域 */
+.rm-comment-input-group {
+    margin-bottom: 20px;
+}
+
+.rm-comment-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #444;
+}
+
+.rm-comment-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px 12px;
+    border: 1.5px solid #dcdfe6;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.rm-comment-input:focus {
+    border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.15);
+}
+
+.rm-comment-count {
+    text-align: right;
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+}
+
+/* 弹窗操作按钮 */
+.rm-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.rm-cancel-btn {
+    padding: 8px 18px;
+    background: #f4f4f5;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.rm-submit-btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #409eff;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.rm-submit-btn:hover {
+    background: #318ae3;
+}
+
+/* 动画 */
+@keyframes rm-fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes rm-popupIn {
+    from {
+        transform: translateY(-8px) scale(0.97);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}

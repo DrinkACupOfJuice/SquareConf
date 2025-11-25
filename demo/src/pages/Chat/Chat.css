@@ -39,7 +39,6 @@
   padding: 20px;
   background: #fff;
   gap: 20px;
-    /* 白色滚动条 */
   scrollbar-width: thin;
   scrollbar-color: #ffffff #ffffff;
 }
@@ -51,46 +50,16 @@
   max-width: 80%;
 }
 
+/* 隐藏头像 */
 .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid #ccc;
-  background-color: #f0f0f0;
-  flex-shrink: 0;
+  display: none;
 }
 
-.bubble {
-  max-width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  border-top-left-radius: 0;
-  position: relative;
-  background-color: #fff;
-}
-
-.bubble-content {
-  margin-bottom: 4px;
-  line-height: 1.5;
-  white-space: pre-line;
-  word-break: break-word;
-}
-
-.bubble-meta {
-  font-size: 11px;
-  color: #666;
-  text-align: left;
-}
-
-.ai-meta {
-  margin-left: 6px;
-  color: #666;
-}
-
+/* 用户消息气泡 */
 .message.user {
   align-self: flex-end;
   flex-direction: row-reverse;
+  margin-right: 110px;  /* 增加右边距，让气泡整体向左移动 */
 }
 
 .message.user .bubble {
@@ -98,13 +67,48 @@
   border-top-left-radius: 8px;
   background-color: #f7f9fc;
   border-color: #e1e8ed;
+  padding: 10px 15px;
+}
+
+/* AI消息纯文本 */
+.message.assistant {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 120px;
+}
+.message.assistant .bubble {
+  background: none;
+  border: none;
+  padding: 0;
+  max-width: 80%;
+  color: #222;
+}
+
+/* bubble 内容 */
+.bubble-content {
+  margin-bottom: 4px;
+  line-height: 1.5;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+/* bubble meta */
+.bubble-meta {
+  font-size: 11px;
+  color: #666;
+  text-align: left;
+}
+
+.message.assistant .bubble-meta {
+  margin-top: 4px;
+  text-align: left;
 }
 
 /* =================== 工具行 =================== */
 .tools-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 10px;
   padding: 0 20px;
 }
@@ -139,18 +143,23 @@
 /* =================== 输入区域 =================== */
 .input-area {
   width: 100%;
-  padding: 0 20px 10px;
+  padding: 10px 130px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
 .chat-input-wrapper {
+  flex: 1 ;
+  max-width: 1200px;
   border: 1px solid #ccc;
 }
 
 .input-row {
   display: flex;
   gap: 10px;
-  padding: 0 20px 20px;
+  max-width: 800px;
+  width: 100%;
 }
 
 .input-box {
@@ -158,198 +167,6 @@
   padding: 10px 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
-}
-
-/* =================== 评价弹窗 =================== */
-.rating-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  animation: fadeIn 0.2s ease;
-}
-
-.modal-content {
-  background: #ffffff;
-  width: 480px;
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
-  position: relative;
-  animation: popupIn 0.25s ease;
-}
-
-/* 弹窗标题 */
-.modal-title {
-  margin: 0 0 16px 0;
-  font-size: 19px;
-  font-weight: 600;
-  color: #333;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e6e6e6;
-}
-
-/* 关闭按钮 */
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 22px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: #777;
-  transition: 0.2s;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.close-btn:hover {
-  color: #000;
-  background: #f5f5f5;
-}
-
-/* 评分输入组 */
-.rating-input-group {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.rating-label {
-  font-size: 14px;
-  color: #444;
-  flex-shrink: 0;
-}
-
-.rating-input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1.5px solid #dcdfe6;
-  border-radius: 6px;
-  font-size: 14px;
-  background: #fff;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.rating-input:focus {
-  border-color: #409eff;
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.15);
-}
-
-.rating-input.error {
-  border-color: #e74c3c;
-}
-
-.error-message {
-  font-size: 12px;
-  color: #e74c3c;
-  margin-top: 4px;
-  margin-left: 70px;
-}
-
-/* 详细评价输入组 */
-.comment-input-group {
-  margin-bottom: 20px;
-}
-
-.comment-label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: #444;
-}
-
-.comment-input {
-  width: 100%;
-  min-height: 100px;
-  max-height: 300px;
-  padding: 10px 12px;
-  border: 1.5px solid #dcdfe6;
-  border-radius: 8px;
-  font-size: 14px;
-  background: #fff;
-  resize: vertical;
-  overflow-y: auto;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.comment-input:focus {
-  border-color: #409eff;
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.15);
-}
-
-.comment-count {
-  text-align: right;
-  font-size: 12px;
-  color: #999;
-  margin-top: 4px;
-}
-
-/* 弹窗按钮组 */
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.cancel-btn {
-  padding: 8px 18px;
-  background: #f4f4f5;
-  border: 1px solid #dcdfe6;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.cancel-btn:hover {
-  background: #e9e9eb;
-}
-
-.submit-btn {
-  padding: 8px 18px;
-  border: none;
-  border-radius: 8px;
-  background: #409eff;
-  color: #fff;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.submit-btn:hover {
-  background: #318ae3;
-}
-
-/* =================== 弹窗动画 =================== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes popupIn {
-  from {
-    transform: translateY(-8px) scale(0.97);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
 }
 
 /* =================== 响应式调整 =================== */
@@ -370,11 +187,6 @@
 
   .message {
     max-width: 90%;
-  }
-
-  .modal-content {
-    width: 90%;
-    padding: 20px;
   }
 
   .tools-row {
