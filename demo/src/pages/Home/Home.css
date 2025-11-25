@@ -18,7 +18,7 @@
   padding: 20px;
 }
 
-/* ======= 顶部轻提示（方案A） ======= */
+/* ======= 顶部轻提示（方案A）======= */
 .home-input-title {
   font-size: 35px;
   font-weight: 600;
@@ -26,6 +26,10 @@
   opacity: 0.85;
   text-align: center;
   margin-bottom: 18px;
+  line-height: 1.5; /* 关键：确保行高一致，避免文本换行时高度变化 */
+  min-height: 52.5px; /* 关键：35px * 1.5 = 52.5px（与行高匹配的最小高度） */
+  padding-right: 24px; /* 继承打字动画的右侧内边距，确保占位框与打字框宽度一致 */
+  box-sizing: border-box; /* 确保内边距不影响整体宽度 */
 }
 
 /* ======= 输入框外层卡片 ======= */
@@ -85,11 +89,17 @@
   margin: 0 auto;
 }
 
-/* ======= 打字机动画样式（新增/修改） ======= */
+/* ======= 打字机动画样式（新增/修改）======= */
+/* 打字机容器：统一控制占位框和打字文本的布局，确保居中对齐 */
+.typing-container {
+  width: 100%; /* 占满父容器宽度，保证文本居中 */
+  display: flex;
+  justify-content: center; /* 子元素水平居中 */
+}
+
 .typing-animation {
   position: relative;
-  padding-right: 24px; /* 给光标留出空间（适配35px大字体） */
-  display: inline-block; /* 避免光标超出文本范围 */
+  display: inline-block; /* 避免光标超出文本范围，宽度自适应内容 */
 }
 
 .typing-cursor {
@@ -110,16 +120,33 @@
   50% { opacity: 0; }
 }
 
-/* 打字完成后隐藏光标（可选优化） */
+/* 打字完成后隐藏光标（优化） */
 .typing-animation.finished .typing-cursor {
   display: none;
 }
 
-/* 响应式调整 */
+/* ======= 打字机占位框（新增）======= */
+.typing-placeholder {
+  /* 完全继承标题的所有样式，确保尺寸、间距、对齐方式一致 */
+  font-size: 35px;
+  font-weight: 600;
+  color: #333;
+  opacity: 0.85;
+  text-align: center;
+  margin-bottom: 18px;
+  line-height: 1.5; /* 关键：确保行高一致，避免文本换行时高度变化 */
+  min-height: 52.5px; /* 关键：35px * 1.5 = 52.5px（与行高匹配的最小高度） */
+  padding-right: 24px; /* 继承打字动画的右侧内边距，确保占位框与打字框宽度一致 */
+  box-sizing: border-box; /* 确保内边距不影响整体宽度 */
+  visibility: hidden; /* 透明占位，不显示任何内容 */
+}
+
+/* 响应式调整（同步占位框和打字框的样式） */
 @media (max-width: 768px) {
   .home-input-title {
     font-size: 28px;
     padding-right: 20px;
+    min-height: 42px; /* 28px * 1.5 = 42px（同步行高计算的最小高度） */
   }
   
   .typing-cursor {
@@ -138,6 +165,7 @@
     font-size: 24px;
     padding-right: 18px;
     margin-bottom: 16px;
+    min-height: 36px; /* 24px * 1.5 = 36px（同步行高计算的最小高度） */
   }
   
   .typing-cursor {
