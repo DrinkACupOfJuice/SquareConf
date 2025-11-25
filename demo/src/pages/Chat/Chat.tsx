@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './chat.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import ChatInput from '../../components/Chatinput/Chatinput';
+import FileUploader from '../../components/Fileuploader/Fileuploader';
 
 // 定义对话类型（与Sidebar组件一致）
 interface Dialog {
@@ -9,18 +10,7 @@ interface Dialog {
   title: string;
 }
 
-<<<<<<< HEAD
-// 消息类型接口（新增时间、思考时间、token数字段、文件字段）
-=======
-// 对话列表数据（传递给Sidebar组件）
-const dialogs: Dialog[] = [
-  { id: '1', title: '对话1' },
-  { id: '2', title: '对话2' },
-  { id: '3', title: '对话3' },
-];
-
-// 消息类型接口（新增时间、思考时间、token数字段）
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
+// 消息类型接口（包含所有字段）
 interface Message {
   id: string;
   sender: 'user' | 'assistant';
@@ -31,7 +21,7 @@ interface Message {
   file?: { id?: string; name?: string; url?: string }; // 文件信息（可选）
 }
 
-// 对话列表数据（传递给Sidebar组件）
+// 对话列表数据（仅定义一次）
 const dialogs: Dialog[] = [
   { id: '1', title: '对话1' },
   { id: '2', title: '对话2' },
@@ -59,6 +49,7 @@ const Chat: React.FC = () => {
   const [ratingScore, setRatingScore] = useState<string>('');
   const [ratingComment, setRatingComment] = useState('');
   const [scoreError, setScoreError] = useState('');
+  const [inputValue, setInputValue] = useState(''); // 新增inputValue状态
   const chatInputRef = useRef<{ setInput: (value: string) => void } | null>(null);
 
   // 格式化时间为 "HH:MM:SS"
@@ -83,23 +74,18 @@ const Chat: React.FC = () => {
     }
   }, [ratingScore]);
 
-  // 模拟AI思考过程（随机1-3秒）
+  // 模拟AI思考过程（修复重复判断逻辑）
   const simulateAIChat = (userContent: string, hasFile: boolean): Promise<{ content: string; thinkingTime: number; tokenCount: number }> => {
     return new Promise((resolve) => {
       const thinkingTime = Math.floor(Math.random() * 2000) + 1000; // 1-3秒
       setTimeout(() => {
         let aiContent = '';
         let tokenCount = 0;
-<<<<<<< HEAD
         
         if (hasFile) {
           aiContent = '我已收到你上传的文件！请告诉我你需要对这个文件进行什么操作（如解析内容、转换格式等），我会为你处理～';
           tokenCount = Math.floor(aiContent.length * 0.7);
         } else if (userContent.includes('使用')) {
-=======
-
-        if (userContent.includes('使用')) {
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
           aiContent = '你可以通过输入框发送消息与我互动，点击"评价一下本次使用如何"可提交评分和反馈，发送后我会及时回复你～';
           tokenCount = Math.floor(aiContent.length * 0.7);
         } else if (userContent.includes('评分')) {
@@ -119,16 +105,19 @@ const Chat: React.FC = () => {
     });
   };
 
-  // 消息发送逻辑（适配 ChatInput）
-  const handleSend = async (inputValue: string, uploadedFile: { id?: string; name?: string; url?: string } | null) => {
-    let userContent = inputValue.trim();
+  // 消息发送逻辑（适配两种输入方式）
+  const handleSend = async (inputVal?: string, uploadedFile?: { id?: string; name?: string; url?: string } | null) => {
+    // 兼容ChatInput和原生输入框
+    let userContent = inputVal ? inputVal.trim() : inputValue.trim();
+    if (!userContent && !uploadedFile) return;
+
     const hasFile = !!uploadedFile;
     
     // 拼接文件信息
     if (hasFile) {
       userContent = userContent 
-        ? `${userContent}\n📄 上传文件：${uploadedFile.name}` 
-        : `📄 上传文件：${uploadedFile.name}`;
+        ? `${userContent}\n📄 上传文件：${uploadedFile?.name}` 
+        : `📄 上传文件：${uploadedFile?.name}`;
     }
 
     // 添加用户消息
@@ -140,9 +129,12 @@ const Chat: React.FC = () => {
       file: uploadedFile || undefined
     };
     setMessages(prev => [...prev, userMessage]);
+    
+    // 清空原生输入框
+    if (!inputVal) setInputValue('');
 
     // AI回复
-    const aiResponse = await simulateAIChat(inputValue, hasFile);
+    const aiResponse = await simulateAIChat(userContent, hasFile);
     const aiMessage: Message = {
       id: `resp-${Date.now()}`,
       sender: 'assistant',
@@ -176,16 +168,8 @@ const Chat: React.FC = () => {
       setScoreError('请输入1-100之间的数字');
       return;
     }
-<<<<<<< HEAD
     
     console.log('提交评价：', { 评分: num, 详细评价: ratingComment });
-=======
-
-    console.log('提交评价：', {
-      评分: num,
-      详细评价: ratingComment
-    });
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
     closeRating();
 
     // 评价后AI回复
@@ -202,23 +186,13 @@ const Chat: React.FC = () => {
 
   return (
     <div className="container">
-<<<<<<< HEAD
       <Sidebar dialogs={dialogs} activeKey="/chat" />
       
-=======
-      <Sidebar dialogs={dialogs} />
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
       <div className="chat-container">
-        {/* 消息列表区域 */}
         <div className="message-list">
           {messages.map((msg) => (
-<<<<<<< HEAD
-            <div 
-              key={msg.id} 
-=======
             <div
               key={msg.id}
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
               className={`message ${msg.sender}`}
             >
               <div className="avatar"></div>
@@ -226,10 +200,7 @@ const Chat: React.FC = () => {
                 <div className="bubble-content">{msg.content}</div>
                 <div className="bubble-meta">
                   {msg.time}
-<<<<<<< HEAD
-=======
                   {/* AI消息额外显示思考时间和token数 */}
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
                   {msg.sender === 'assistant' && (
                     <span className="ai-meta">
                       • 思考{msg.thinkingTime?.toFixed(1)}s • 调用{msg.tokenCount}token
@@ -241,15 +212,12 @@ const Chat: React.FC = () => {
           ))}
         </div>
 
-<<<<<<< HEAD
-        {/* 输入区域（评价按钮 + ChatInput） */}
         <div className="tools-row">
           <button className="rating-btn" onClick={openRating}>
             评价一下本次使用如何
           </button>
         </div>
-        
-        {/* ChatInput 组件（适配原有样式） */}
+
         <div className="input-area">
           <ChatInput
             ref={chatInputRef}
@@ -262,48 +230,15 @@ const Chat: React.FC = () => {
           />
         </div>
 
-        {/* 评价弹窗 */}
-=======
-        <div>
-          <button className="rating-btn" onClick={openRating}>
-            评价一下本次使用如何
-          </button>
-          <div className="uploader-wrapper">
-            <FileUploader />
-          </div>
-          <div className="input-row">
-            <input
-              type="text"
-              className="input-box"
-              placeholder="请输入"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            />
-            <button className="send-btn" onClick={handleSend}>
-              发送
-            </button>
-          </div>
-        </div>
-
-        {/* 评价弹窗（带滑动条1-100） */}
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
         {isRatingOpen && (
           <div className="rating-modal">
             <div className="modal-content">
               <button className="close-btn" onClick={closeRating}>×</button>
-<<<<<<< HEAD
-              <h3 className="modal-title">请评价</h3>
-              
-              <div className="rating-input-group">
-                <label className="rating-label">评分（1-100）：</label>
-=======
               <h3 className="modal-title">请评价本次使用</h3>
 
-              {/* 滑动条评分 */}
+              {/* 评分输入 */}
               <div className="rating-input-group">
                 <label className="rating-label">评分(1-100)：</label>
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
                 <input
                   type="text"
                   className={`rating-input ${scoreError ? 'error' : ''}`}
@@ -314,21 +249,8 @@ const Chat: React.FC = () => {
                 />
                 {scoreError && <div className="error-message">{scoreError}</div>}
               </div>
-<<<<<<< HEAD
 
-              <div className="comment-input-group">
-                <label className="comment-label">详细评价：</label>
-                <textarea
-                  className="comment-input"
-                  placeholder="请输入您的详细评价（可选）"
-                  value={ratingComment}
-                  onChange={(e) => setRatingComment(e.target.value)}
-                  rows={4}
-                ></textarea>
-              </div>
-
-=======
-              {/* 详细评价输入 */}
+              {/* 详细评价输入（带字符计数和自动高度） */}
               <div className="comment-input-group">
                 <label className="comment-label">详细评价（可选）：</label>
                 <textarea
@@ -339,13 +261,13 @@ const Chat: React.FC = () => {
                     if (e.target.value.length <= 500) setRatingComment(e.target.value);
                     // 自动调整高度
                     const target = e.target;
-                    target.style.height = 'auto';           // 重置高度
-                    target.style.height = target.scrollHeight + 'px'; // 设置为内容高度
+                    target.style.height = 'auto';
+                    target.style.height = target.scrollHeight + 'px';
                   }}
                 ></textarea>
                 <div className="comment-count">{ratingComment.length}/500</div>
               </div>
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
+
               <div className="modal-actions">
                 <button className="cancel-btn" onClick={closeRating}>取消</button>
                 <button className="submit-btn" onClick={submitRating}>提交</button>

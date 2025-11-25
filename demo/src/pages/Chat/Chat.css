@@ -7,25 +7,19 @@
   color: #000;
 }
 
-<<<<<<< HEAD
-/* 页面整体布局 */
+/* =================== 页面整体布局 =================== */
 .container {
   width: 100vw;
   height: 100vh;
   display: flex;
-=======
-.container {
-  width: 100%;
-  height: 100%;
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
   gap: 20px;
   padding: 20px;
   background: #f9f9f9;
 }
 
-/* 聊天容器 */
+/* =================== 聊天容器 =================== */
 .chat-container {
-  border-radius: 2%;
+  border-radius: 8px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -103,8 +97,7 @@
   border-color: #e1e8ed;
 }
 
-<<<<<<< HEAD
-/* 工具行（评价按钮） */
+/* =================== 工具行 =================== */
 .tools-row {
   display: flex;
   align-items: center;
@@ -113,48 +106,54 @@
   padding: 0 20px;
 }
 
-/* 评价按钮样式 */
-.rating-btn {
-=======
-/* =================== 按钮和输入框 =================== */
+.uploader-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* =================== 按钮样式 =================== */
 .rating-btn,
 .send-btn {
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
   padding: 8px 16px;
   border: 1px solid #ccc;
   background: none;
   cursor: pointer;
-  transition: background 0.1s;
+  transition: background 0.2s;
   width: fit-content;
   font-size: 14px;
 }
 
-<<<<<<< HEAD
 .rating-btn:hover {
   background-color: #f5f5f5;
 }
 
-.rating-btn:active {
-=======
 .rating-btn:active,
 .send-btn:active {
   outline: none;
-  /* 防止点击出现黑色边框 */
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
   background: #ccc;
 }
 
-/* 输入区域容器（仅控制ChatInput的外层布局） */
+/* =================== 输入区域 =================== */
 .input-area {
   width: 100%;
-  padding: 0 20px 20px;
+  padding: 0 20px 10px;
   box-sizing: border-box;
 }
 
-<<<<<<< HEAD
-.chat-input-container{
-  width: 100%!important;
-=======
+.chat-input-container {
+  width: 100% !important;
+}
+
+.chat-input-wrapper {
+  border: 1px solid #ccc;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  padding: 0 20px 20px;
+}
+
 .input-box {
   flex: 1;
   padding: 10px 15px;
@@ -162,23 +161,7 @@
   border-radius: 8px;
 }
 
-.tools-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
-}
-
-.chat-input-wrapper{
-  border:1px solid #ccc;
-}
-
-<<<<<<< HEAD
-/* 评价弹窗样式 */
-=======
 /* =================== 评价弹窗 =================== */
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
 .rating-modal {
   position: fixed;
   inset: 0;
@@ -193,19 +176,15 @@
 
 .modal-content {
   background: #ffffff;
-  width: 420px;
+  width: 480px;
   padding: 24px;
   border-radius: 14px;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
   position: relative;
-<<<<<<< HEAD
-  border-radius: 8px;
-=======
   animation: popupIn 0.25s ease;
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
 }
 
-/* 标题 */
+/* 弹窗标题 */
 .modal-title {
   margin: 0 0 16px 0;
   font-size: 19px;
@@ -224,8 +203,8 @@
   border: none;
   background: none;
   cursor: pointer;
-<<<<<<< HEAD
-  transition: background 0.1s;
+  color: #777;
+  transition: 0.2s;
   width: 30px;
   height: 30px;
   display: flex;
@@ -235,21 +214,11 @@
 }
 
 .close-btn:hover {
-  background: #f5f5f5;
-=======
-  color: #777;
-  transition: 0.2s;
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
-}
-
-.close-btn:hover {
   color: #000;
+  background: #f5f5f5;
 }
 
-<<<<<<< HEAD
-=======
-/* =================== 评分输入框 =================== */
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
+/* 评分输入组 */
 .rating-input-group {
   margin-bottom: 20px;
   display: flex;
@@ -260,32 +229,16 @@
 .rating-label {
   font-size: 14px;
   color: #444;
+  flex-shrink: 0;
 }
 
 .rating-input {
-  width: 130px;
-  /* 小输入框 */
-  padding: 6px 8px;
+  flex: 1;
+  padding: 8px 12px;
   border: 1.5px solid #dcdfe6;
   border-radius: 6px;
   font-size: 14px;
   background: #fff;
-<<<<<<< HEAD
-  border-radius: 4px;
-}
-
-.rating-input.error {
-  border-color: #ef4444;
-}
-
-.error-message {
-  margin-top: 5px;
-  font-size: 14px;
-  color: #ef4444;
-}
-
-=======
-  text-align: center;
   transition: border 0.2s, box-shadow 0.2s;
 }
 
@@ -302,10 +255,10 @@
   font-size: 12px;
   color: #e74c3c;
   margin-top: 4px;
+  margin-left: 70px;
 }
 
-/* =================== 详细评价输入框 =================== */
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
+/* 详细评价输入组 */
 .comment-input-group {
   margin-bottom: 20px;
 }
@@ -319,20 +272,14 @@
 
 .comment-input {
   width: 100%;
-  min-height: 80px;
+  min-height: 100px;
   max-height: 300px;
   padding: 10px 12px;
   border: 1.5px solid #dcdfe6;
   border-radius: 8px;
   font-size: 14px;
   background: #fff;
-<<<<<<< HEAD
-  min-height: 100px;
-  border-radius: 4px;
-}
-
-=======
-  resize: none;
+  resize: vertical;
   overflow-y: auto;
   transition: border 0.2s, box-shadow 0.2s;
 }
@@ -349,8 +296,7 @@
   margin-top: 4px;
 }
 
-/* =================== 弹窗按钮 =================== */
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
+/* 弹窗按钮组 */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -364,51 +310,6 @@
   border: 1px solid #dcdfe6;
   border-radius: 8px;
   cursor: pointer;
-<<<<<<< HEAD
-  transition: background 0.1s;
-  border-radius: 4px;
-}
-
-.cancel-btn:hover, .submit-btn:hover {
-  background-color: #f5f5f5;
-}
-
-.cancel-btn:active, .submit-btn:active {
-  background: #ccc;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .container {
-    padding: 10px;
-    gap: 10px;
-  }
-
-  .chat-container {
-    padding: 10px;
-  }
-
-  .message-list {
-    padding: 10px;
-    gap: 15px;
-  }
-
-  .message {
-    max-width: 90%;
-  }
-
-  .modal-content {
-    width: 90%;
-    padding: 20px;
-  }
-
-  .tools-row {
-    padding: 0 10px;
-  }
-
-  .input-area {
-    padding: 0 10px 10px;
-=======
   transition: background 0.2s;
 }
 
@@ -436,7 +337,6 @@
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
@@ -447,10 +347,47 @@
     transform: translateY(-8px) scale(0.97);
     opacity: 0;
   }
-
   to {
     transform: translateY(0) scale(1);
     opacity: 1;
->>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
+  }
+}
+
+/* =================== 响应式调整 =================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .chat-container {
+    padding: 10px;
+  }
+
+  .message-list {
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .tools-row {
+    padding: 0 10px;
+    flex-wrap: wrap;
+  }
+
+  .input-area {
+    padding: 0 10px 10px;
+  }
+
+  .input-row {
+    padding: 0 10px 10px;
   }
 }
