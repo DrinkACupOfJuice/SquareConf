@@ -68,6 +68,8 @@
   font-size: 15px;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border: none; /* 移除默认边框 */
+  outline: none; /* 移除聚焦轮廓 */
 }
 
 .home-btn .attach-btn:hover,
@@ -77,9 +79,69 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* ======= 关键新增：仅 Home 页面生效的 chat-input-container 样式 ======= */
 /* 利用 home-main 作为页面专属类（Home 页面独有的容器类），限定样式作用域 */
 .home-main .chat-input-container {
   max-width: 800px; /* 仅 Home 页面限制最大宽度 */
-  margin: 0 auto; /* 可选：让输入框水平居中，更美观 */
+  margin: 0 auto;
+}
+
+/* ======= 打字机动画样式（新增/修改） ======= */
+.typing-animation {
+  position: relative;
+  padding-right: 24px; /* 给光标留出空间（适配35px大字体） */
+  display: inline-block; /* 避免光标超出文本范围 */
+}
+
+.typing-cursor {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%); /* 垂直居中（适配大字体） */
+  width: 3px; /* 光标宽度（适配35px大字体） */
+  height: 35px; /* 光标高度（与字体大小一致） */
+  background-color: #333;
+  opacity: 0.85; /* 与标题透明度一致 */
+  animation: blink 1s infinite;
+}
+
+/* 光标闪烁动画 */
+@keyframes blink {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0; }
+}
+
+/* 打字完成后隐藏光标（可选优化） */
+.typing-animation.finished .typing-cursor {
+  display: none;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .home-input-title {
+    font-size: 28px;
+    padding-right: 20px;
+  }
+  
+  .typing-cursor {
+    height: 28px;
+    width: 2.5px;
+  }
+  
+  .home-input-wrapper {
+    width: 100%;
+    padding: 16px 18px 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-input-title {
+    font-size: 24px;
+    padding-right: 18px;
+    margin-bottom: 16px;
+  }
+  
+  .typing-cursor {
+    height: 24px;
+    width: 2px;
+  }
 }
