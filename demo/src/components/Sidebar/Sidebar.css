@@ -1,4 +1,4 @@
-/* 侧边栏基础样式 */
+/* ====== 侧边栏基础样式 ====== */
 .sidebar {
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.9);
@@ -9,24 +9,19 @@
   flex-direction: column;
   padding: 20px;
   gap: 12px;
-  transition: width 0.3s ease, padding 0.3s ease, align-items 0.3s ease;
   position: relative;
-}
-
-/* 展开状态 */
-.sidebar.expanded {
   width: 200px;
-  align-items: flex-start;
+  transition: width 0.35s ease, padding 0.35s ease;
 }
 
-/* 收起状态 - 固定宽度+按钮尺寸统一 */
+/* 收起状态 */
 .sidebar.collapsed {
   width: 60px;
   padding: 20px 10px;
   align-items: center;
 }
 
-/* 侧边栏收起/展开按钮 */
+/* 收起/展开按钮 */
 .sidebar-toggle-btn {
   position: absolute;
   top: 50%;
@@ -44,7 +39,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   z-index: 10;
 }
 
@@ -53,7 +48,7 @@
   color: white;
 }
 
-/* 导航按钮容器 */
+/* 导航按钮 */
 .nav-buttons {
   display: flex;
   flex-direction: column;
@@ -61,48 +56,54 @@
   width: 100%;
 }
 
-/* 导航按钮 - 收起/展开时尺寸统一 */
 .setting-btn {
-  padding: 12px; /* 固定内边距，确保收起/展开时按钮高度一致 */
+  padding: 12px;
   border: none;
   background: none;
   font-size: 14px;
   cursor: pointer;
   border-radius: 8px;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  height: 44px; /* 固定高度，确保所有按钮尺寸一致 */
+  height: 44px;
+  transition: all 0.35s ease;
 }
 
-/* 收起时：图标居中，隐藏文字，保持按钮尺寸 */
 .sidebar.collapsed .setting-btn {
   justify-content: center;
   gap: 0;
-  padding: 12px; /* 与展开时一致的内边距 */
-  height: 44px; /* 固定高度，确保大小统一 */
+  padding: 12px;
 }
 
 .setting-btn .btn-icon {
-  font-size: 18px; /* 固定图标大小 */
-  display: inline-block;
-  width: 20px; /* 固定图标宽度，确保对齐 */
+  font-size: 18px;
+  width: 20px;
   height: 20px;
   text-align: center;
 }
 
-.setting-btn .btn-text {
-  transition: all 0.3s ease;
+.setting-btn .btn-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
-/* 收起时：文字完全隐藏 */
+/* 文字过渡动画 */
+.setting-btn .btn-text {
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 150px;
+  /* 展开时最大宽度 */
+  opacity: 1;
+  transition: max-width 0.35s ease, opacity 0.25s ease 0.1s;
+}
+
 .sidebar.collapsed .setting-btn .btn-text {
   opacity: 0;
-  width: 0;
-  overflow: hidden;
-  visibility: hidden;
+  max-width: 0;
+  transition: max-width 0.35s ease, opacity 0.2s ease;
 }
 
 .setting-btn:hover {
@@ -115,7 +116,7 @@
   color: #1677ff;
 }
 
-/* 历史对话面板 */
+/* 历史面板 */
 .history-panel {
   margin-top: 12px;
   display: flex;
@@ -128,30 +129,27 @@
   width: 100%;
 }
 
-/* 历史对话按钮 - 与导航按钮尺寸统一 */
 .collapse-btn {
   width: 100%;
-  padding: 12px; /* 与导航按钮一致的内边距 */
+  padding: 12px;
   font-size: 13px;
   text-align: left;
   border: none;
   background: rgba(22, 119, 255, 0.08);
   border-radius: 8px;
   cursor: pointer;
-  position: relative;
-  transition: all 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 44px; /* 固定高度，与导航按钮尺寸一致 */
+  height: 44px;
+  transition: all 0.35s ease;
 }
 
-/* 收起时：隐藏文字，保持按钮尺寸 */
 .sidebar.collapsed .panel-title {
   opacity: 0;
-  width: 0;
+  max-width: 0;
   overflow: hidden;
-  visibility: hidden;
+  transition: max-width 0.35s ease, opacity 0.25s ease;
 }
 
 .collapse-btn:disabled {
@@ -162,9 +160,7 @@
 
 .collapse-btn::after {
   content: '▼';
-  position: static;
-  margin-left: auto;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease;
   font-size: 14px;
 }
 
@@ -176,9 +172,11 @@
   background: rgba(22, 119, 255, 0.15);
 }
 
+/* 历史列表 */
 .panel-content {
   overflow: hidden;
   height: 0;
+  transition: height 0.35s ease;
 }
 
 .dialog-list {
@@ -200,7 +198,7 @@
   color: #333;
   transition: all 0.25s ease;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-  height: 44px; /* 列表项也与按钮尺寸统一 */
+  height: 44px;
   display: flex;
   align-items: center;
 }
