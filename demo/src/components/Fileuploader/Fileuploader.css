@@ -6,25 +6,28 @@
 }
 
 .attach-btn {
-  padding: 8px 16px;
-  border: none;
+  padding: 4px 10px;
+  border: 1px solid gainsboro; /* 默认有边框 */
   border-radius: 4px;
-  background-color: #4299e1;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(158, 158, 158);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: background-color 0.2s;
+  transition: all 0.2s; /* 改为 all，让边框/背景色过渡更平滑 */
+  box-sizing: border-box; /* 关键：确保 padding + border 不超出元素总尺寸 */
 }
 
 .attach-btn:disabled {
-  background-color: #94a3b8;
+  border: 1px solid transparent; /* 禁用状态用透明边框占位，避免收缩 */
+  background-color: #dbdbdb;
   cursor: not-allowed;
 }
 
 .attach-btn:hover:not(:disabled) {
-  background-color: #3182ce;
+  border: 1px solid transparent; /* 用透明边框替代无边框，保持尺寸不变 */
+  background-color: #dcdcdc;
 }
 
 .file-preview {
@@ -32,7 +35,7 @@
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #fbfbfb;
   border-radius: 4px;
   background-color: #f8fafc;
 }
@@ -64,3 +67,4 @@
   font-size: 14px;
   margin-left: 8px;
 }
+

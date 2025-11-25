@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import FileUploader from '../../components/Fileuploader/Fileuploader';
+import ChatInput from '../../components/Chatinput/Chatinput';
 import './home.css';
 
 interface Dialog {
@@ -11,25 +11,17 @@ interface Dialog {
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState('');
-  const [uploadedFile, setUploadedFile] = useState<{ id?: string; name?: string } | null>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // 对话框数据（保持不变）
   const dialogs: Dialog[] = [
     { id: '1', title: '对话1' },
     { id: '2', title: '对话2' },
     { id: '3', title: '对话3' },
   ];
 
-  // 自动调整 textarea 高度
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
-      inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
-    }
-  }, [inputValue]);
-
-  const goToChat = () => {
+  // 处理输入框的发送事件
+  const handleSend = (inputValue: string, uploadedFile: { id?: string; name?: string } | null) => {
+    // 发送后跳转到 chat 页面，传递数据
     navigate('/chat', { state: { input: inputValue, file: uploadedFile } });
   };
 
@@ -39,27 +31,10 @@ const Home: React.FC = () => {
 
       <main className="home-main">
         <div className="home-input-title">有什么我可以帮你的？</div>
-
-        <div className="home-input-wrapper">
-          <textarea
-            ref={inputRef}
-            className="home-input-box"
-            placeholder="输入内容..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <div className="home-btns">
-            <div className="home-btn attach">
-              <FileUploader onUploadSuccess={(file) => setUploadedFile(file)} />
-            </div>
-
-            <div className="home-btn send">
-              <button className="home-send-btn" onClick={goToChat}>
-                ↑
-              </button>
-            </div>
-          </div>
-        </div>
+        <ChatInput
+          placeholder="输入内容..."
+          onSend={handleSend}
+        />
       </main>
     </div>
   );
