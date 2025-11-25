@@ -43,7 +43,7 @@
   flex: 1; 
   border: none;
   border-radius: 6px;
-  resize: none; /* 保留禁用手动拖动（如需允许拖动可改为 resize: vertical） */
+  resize: none;
   font-size: 17px;
   line-height: 1.5;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -86,11 +86,11 @@
 }
 
 .chat-input-send-btn {
-  width: 36px; /* 固定宽高，确保正圆 */
+  width: 36px;
   height: 36px;
   flex-shrink: 0;
   border: none;
-  border-radius: 50%; /* 50% 更规范，确保正圆 */
+  border-radius: 50%;
   background-color: #6797ff;
   color: #ffffff;
   font-size: 18px;
@@ -99,7 +99,7 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
-  padding: 0; /* 清除内边距，避免影响正圆 */
+  padding: 0;
 }
 
 .chat-input-send-btn:disabled {
