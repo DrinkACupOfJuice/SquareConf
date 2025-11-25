@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ dialogs = [], activeKey }) => {
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [isReady, setIsReady] = useState<boolean>(false);
-  const [activeDialogId, setActiveDialogId] = useState<string>(dialogs[0]?.id || '');
+  const [activeDialogId, setActiveDialogId] = useState<string>('');
   const [hasMounted, setHasMounted] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 

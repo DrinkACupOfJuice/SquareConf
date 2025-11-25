@@ -119,36 +119,42 @@ const KnowledgeBaseManager: React.FC = () => {
               className="kb-card"
               style={{ animationDelay: `${index * 0.12}s` }}
             >
-              <div className="kb-header">
-                <div className="kb-header-left" onClick={() => toggleExpand(kb.id)}>
+              <div className="kb-header" onClick={() => toggleExpand(kb.id)}>
+                <div className="kb-header-left">
                   <strong>{kb.name}</strong>
                   {kb.description && <div className="kb-desc">{kb.description}</div>}
                 </div>
-
-                <div className="kb-actions">
-                  <label className="upload-btn">
-                    上传文件
-                    <input type="file" onChange={e => handleUpload(kb.id, e)} />
-                  </label>
-                  <button className="setting-btn" onClick={() => handleDeleteKb(kb.id)}>删除知识库</button>
-                </div>
               </div>
-
               {expandedKbIds.has(kb.id) && (
-                <div className="file-section">
-                  <ul className="file-list">
-                    {(filesMap[kb.id] || []).length > 0 ? (
-                      filesMap[kb.id].map(f => (
-                        <li key={f.file_id} className="file-item">
-                          <a href={f.url} target="_blank" rel="noreferrer">{f.name}</a>
-                          <span>{(f.size / 1024).toFixed(1)} KB</span>
-                          <button className="setting-btn" onClick={() => handleDeleteFile(kb.id, f.file_id)}>删除</button>
-                        </li>
-                      ))
-                    ) : (
-                      <li>暂无文件</li>
-                    )}
-                  </ul>
+                <div className="kb-expanded">
+
+                  {/* 按钮区：移到折叠内部 */}
+                  <div className="kb-actions">
+                    <label className="upload-btn">
+                      上传文件
+                      <input type="file" onChange={e => handleUpload(kb.id, e)} />
+                    </label>
+
+                    <button className="setting-btn danger" onClick={() => handleDeleteKb(kb.id)}>
+                      删除知识库
+                    </button>
+                  </div>
+                  {/* 文件列表 */}
+                  <div className="file-section">
+                    <ul className="file-list">
+                      {(filesMap[kb.id] || []).length > 0 ? (
+                        filesMap[kb.id].map(f => (
+                          <li key={f.file_id} className="file-item">
+                            <a href={f.url} target="_blank" rel="noreferrer">{f.name}</a>
+                            <span>{(f.size / 1024).toFixed(1)} KB</span>
+                            <button className="setting-btn" onClick={() => handleDeleteFile(kb.id, f.file_id)}>删除</button>
+                          </li>
+                        ))
+                      ) : (
+                        <li>暂无文件</li>
+                      )}
+                    </ul>
+                  </div>
                 </div>
               )}
             </li>

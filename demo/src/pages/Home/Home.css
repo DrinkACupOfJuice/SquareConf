@@ -1,4 +1,4 @@
-/* 使用 container 类统一布局，和 Manager/KBManager 一致 */
+/* ======= 外层布局，与 Manager 保持统一 ======= */
 .container {
   display: flex;
   width: 100%;
@@ -8,18 +8,27 @@
   background: #f7f8fa;
 }
 
-/* 主区 */
+/* ======= 主体区域 ======= */
 .home-main {
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  /* 输入框居中 */
   align-items: center;
   padding: 20px;
-  box-sizing: border-box;
 }
 
-/* 输入框容器 */
+/* ======= 顶部轻提示（方案A） ======= */
+.home-input-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  opacity: 0.85;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+/* ======= 输入框外层卡片 ======= */
 .home-input-wrapper {
   position: relative;
   width: 600px;
@@ -31,7 +40,7 @@
   box-sizing: border-box;
 }
 
-/* 文本输入框 */
+/* ======= 文本输入框 ======= */
 .home-input-box {
   width: 100%;
   min-height: 80px;
@@ -54,7 +63,7 @@
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.08);
 }
 
-/* 底部按钮 */
+/* ======= 底部按钮 ======= */
 .home-btns {
   position: absolute;
   left: 0;
@@ -67,7 +76,7 @@
   align-items: center;
 }
 
-/* 上传按钮和发送按钮样式 */
+/* ======= 上传按钮 & 发送按钮 ======= */
 .home-btn .attach-btn,
 .home-btn .home-send-btn {
   width: 28px;

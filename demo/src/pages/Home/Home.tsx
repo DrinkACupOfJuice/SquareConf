@@ -21,7 +21,7 @@ const Home: React.FC = () => {
     { id: '3', title: '对话3' },
   ];
 
-  // 自适应高度
+  // 自动调整 textarea 高度
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.style.height = 'auto';
@@ -38,6 +38,8 @@ const Home: React.FC = () => {
       <Sidebar dialogs={dialogs} activeKey="/home" />
 
       <main className="home-main">
+        <div className="home-input-title">有什么我可以帮你的？</div>
+
         <div className="home-input-wrapper">
           <textarea
             ref={inputRef}
@@ -50,6 +52,7 @@ const Home: React.FC = () => {
             <div className="home-btn attach">
               <FileUploader onUploadSuccess={(file) => setUploadedFile(file)} />
             </div>
+
             <div className="home-btn send">
               <button className="home-send-btn" onClick={goToChat}>
                 ↑
