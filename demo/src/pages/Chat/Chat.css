@@ -7,15 +7,19 @@
   color: #000;
 }
 
-.container{
-  width: 100%;
-  height: 100%;
+/* 页面整体布局 */
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
   gap: 20px;
   padding: 20px;
   background: #f9f9f9;
 }
 
+/* 聊天容器 */
 .chat-container {
+  border-radius: 2%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -23,6 +27,7 @@
   padding: 20px;
   background: #fff;
   position: relative;
+  height: 100%;
 }
 
 /* 消息列表区域 */
@@ -31,15 +36,16 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  height: 90%;
+  padding: 20px;
+  background: #fff;
   gap: 20px;
-  padding-bottom: 20px;
 }
 
 .message {
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  max-width: 80%;
 }
 
 .avatar {
@@ -47,21 +53,25 @@
   height: 40px;
   border-radius: 50%;
   border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  flex-shrink: 0;
 }
 
 .bubble {
-  max-width: 60%;
+  max-width: 100%;
   padding: 10px 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
   border-top-left-radius: 0;
   position: relative;
+  background-color: #fff;
 }
 
-/* 消息内容和元信息容器 */
 .bubble-content {
   margin-bottom: 4px;
   line-height: 1.5;
+  white-space: pre-line;
+  word-break: break-word;
 }
 
 .bubble-meta {
@@ -70,9 +80,9 @@
   text-align: left;
 }
 
-/* AI消息元信息额外样式 */
 .ai-meta {
   margin-left: 6px;
+  color: #666;
 }
 
 .message.user {
@@ -83,45 +93,54 @@
 .message.user .bubble {
   border-top-right-radius: 0;
   border-top-left-radius: 8px;
+  background-color: #f7f9fc;
+  border-color: #e1e8ed;
 }
 
-.rating-btn, .send-btn {
+/* 工具行（评价按钮） */
+.tools-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 0 20px;
+}
+
+/* 评价按钮样式 */
+.rating-btn {
   padding: 8px 16px;
   border: 1px solid #ccc;
   background: none;
   cursor: pointer;
   transition: background 0.1s;
   width: fit-content;
+  font-size: 14px;
 }
 
-.rating-btn:active, .send-btn:active {
+.rating-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.rating-btn:active {
   background: #ccc;
 }
 
-.input-row {
-  display: flex;
-  gap: 10px;
+/* 输入区域容器（仅控制ChatInput的外层布局） */
+.input-area {
+  width: 100%;
+  padding: 0 20px 20px;
+  box-sizing: border-box;
 }
 
-.input-box {
-  flex: 1;
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-.tools-row {
-  display: flex;
-  align-items: center;
-  gap: 12px; /* 评价按钮与上传组件间距 */
-  margin-bottom: 10px;
+.chat-input-container{
+  width: 100%!important;
 }
 
-.uploader-wrapper {
-  display: flex;
-  align-items: center;
+.chat-input-wrapper{
+  border:1px solid #ccc;
 }
 
-/* 评价弹窗 */
+/* 评价弹窗样式 */
 .rating-modal {
   position: fixed;
   top: 0;
@@ -141,6 +160,7 @@
   padding: 25px;
   width: 500px;
   position: relative;
+  border-radius: 8px;
 }
 
 .modal-title {
@@ -160,13 +180,22 @@
   background: none;
   cursor: pointer;
   transition: background 0.1s;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.close-btn:hover {
+  background: #f5f5f5;
 }
 
 .close-btn:active {
   background: #ccc;
 }
 
-/* 评分输入区域 */
 .rating-input-group {
   margin-bottom: 20px;
 }
@@ -183,19 +212,19 @@
   border: 1px solid #ccc;
   font-size: 16px;
   background: #fff;
+  border-radius: 4px;
 }
 
 .rating-input.error {
-  border-color: #999;
+  border-color: #ef4444;
 }
 
 .error-message {
   margin-top: 5px;
   font-size: 14px;
-  color: #666;
+  color: #ef4444;
 }
 
-/* 详细评价输入区域 */
 .comment-input-group {
   margin-bottom: 25px;
 }
@@ -214,9 +243,9 @@
   resize: vertical;
   background: #fff;
   min-height: 100px;
+  border-radius: 4px;
 }
 
-/* 弹窗按钮区域 */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -229,8 +258,47 @@
   background: none;
   cursor: pointer;
   transition: background 0.1s;
+  border-radius: 4px;
+}
+
+.cancel-btn:hover, .submit-btn:hover {
+  background-color: #f5f5f5;
 }
 
 .cancel-btn:active, .submit-btn:active {
   background: #ccc;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .chat-container {
+    padding: 10px;
+  }
+
+  .message-list {
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .tools-row {
+    padding: 0 10px;
+  }
+
+  .input-area {
+    padding: 0 10px 10px;
+  }
 }
