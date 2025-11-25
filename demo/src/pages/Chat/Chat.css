@@ -39,6 +39,9 @@
   padding: 20px;
   background: #fff;
   gap: 20px;
+    /* 白色滚动条 */
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff #ffffff;
 }
 
 .message {

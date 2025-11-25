@@ -51,6 +51,9 @@ const Chat: React.FC = () => {
   const [scoreError, setScoreError] = useState('');
   const [inputValue, setInputValue] = useState(''); // 新增inputValue状态
   const chatInputRef = useRef<{ setInput: (value: string) => void } | null>(null);
+  
+  // 关键：创建滚动容器的ref
+  const messageEndRef = useRef<HTMLDivElement>(null);
 
   // 格式化时间为 "HH:MM:SS"
   function formatTime(date: Date): string {
@@ -74,7 +77,12 @@ const Chat: React.FC = () => {
     }
   }, [ratingScore]);
 
-  // 模拟AI思考过程（修复重复判断逻辑）
+  // 关键：监听messages变化，自动滚动到底部
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // 模拟AI思考过程（扩展更多回复场景）
   const simulateAIChat = (userContent: string, hasFile: boolean): Promise<{ content: string; thinkingTime: number; tokenCount: number }> => {
     return new Promise((resolve) => {
       const thinkingTime = Math.floor(Math.random() * 2000) + 1000; // 1-3秒
@@ -82,17 +90,78 @@ const Chat: React.FC = () => {
         let aiContent = '';
         let tokenCount = 0;
         
+        // 1. 有文件上传场景
         if (hasFile) {
-          aiContent = '我已收到你上传的文件！请告诉我你需要对这个文件进行什么操作（如解析内容、转换格式等），我会为你处理～';
+          aiContent = '我已收到你上传的文件！支持的操作包括：解析文本内容、提取关键信息、格式转换（如PDF转Word）、数据统计等。请告诉我你的具体需求，我会为你处理～';
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } else if (userContent.includes('使用')) {
-          aiContent = '你可以通过输入框发送消息与我互动，点击"评价一下本次使用如何"可提交评分和反馈，发送后我会及时回复你～';
+        } 
+        // 2. 功能使用相关
+        else if (userContent.includes('使用') || userContent.includes('怎么') || userContent.includes('如何')) {
+          if (userContent.includes('文件') || userContent.includes('上传')) {
+            aiContent = '上传文件可以点击输入框上方的文件上传按钮，支持PDF、Word、Excel、图片等格式。上传后可以告诉我需要对文件进行的操作，比如解析内容、提取数据等～';
+          } else if (userContent.includes('快速提问') || userContent.includes('快捷')) {
+            aiContent = '快速提问功能可以直接点击输入框上方的"快速提问"按钮，会自动填充常用问题。你也可以自定义输入问题，支持多轮对话追问哦～';
+          } else if (userContent.includes('换行')) {
+            aiContent = '在输入框中按 Ctrl+Enter 可以换行，直接按 Enter 会提交发送消息。如果需要输入多行文本，建议使用 Ctrl+Enter 进行换行操作～';
+          } else {
+            aiContent = '你可以通过输入框发送消息与我互动，支持文本提问、文件上传、多轮对话。点击"评价一下本次使用如何"可提交反馈，发送后我会及时回复你～';
+          }
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } else if (userContent.includes('评分')) {
-          aiContent = '评分范围是1-100分，你可以在弹窗中输入分数并填写详细评价，提交后会同步到系统中哦';
+        } 
+        // 3. 评分评价相关
+        else if (userContent.includes('评分') || userContent.includes('评价') || userContent.includes('反馈')) {
+          aiContent = '评分范围是1-100分，点击输入框上方的"评价一下本次使用如何"即可打开评价弹窗。你可以输入分数并填写详细反馈，我们会根据你的建议持续优化产品～';
           tokenCount = Math.floor(aiContent.length * 0.7);
-        } else {
-          aiContent = '感谢你的消息！如果你有具体的问题或需求，可以详细说明，我会尽力为你解答～';
+        } 
+        // 4. 产品功能咨询
+        else if (userContent.includes('功能') || userContent.includes('能做什么') || userContent.includes('支持')) {
+          aiContent = '本工具支持以下功能：\n1. 文本问答（各类问题咨询、知识查询）\n2. 文件处理（解析、转换、数据提取）\n3. 多轮对话（连续追问、上下文理解）\n4. 快速操作（预设问题、快捷指令）\n5. 反馈评价（提交使用体验和建议）\n你可以告诉我具体需求，我会为你提供对应服务～';
+          tokenCount = Math.floor(aiContent.length * 0.7);
+        } 
+        // 5. 问题咨询场景
+        else if (userContent.includes('问') || userContent.includes('什么') || userContent.includes('？') || userContent.includes('吗')) {
+          if (userContent.includes('天气') || userContent.includes('温度')) {
+            aiContent = '抱歉，当前版本暂不支持实时天气查询功能～ 你可以咨询其他问题，比如知识科普、文件处理、功能使用等，我会尽力为你解答～';
+          } else if (userContent.includes('时间') || userContent.includes('日期')) {
+            aiContent = `当前时间为 ${formatTime(new Date())}，你可以咨询其他问题，比如功能使用、文件处理等，我会为你提供帮助～`;
+          } else if (userContent.includes('价格') || userContent.includes('收费') || userContent.includes('免费')) {
+            aiContent = '目前基础功能（文本问答、普通文件处理、快速操作）均为免费使用～ 后续会推出高级功能套餐，具体收费标准会提前通知，敬请关注～';
+          } else if (userContent.includes('客服') || userContent.includes('人工')) {
+            aiContent = '如需人工客服帮助，可以发送"转人工"指令，我们的客服人员会在工作日9:00-18:00为你提供支持。也可以先描述你的问题，我会尽力为你解答～';
+          } else {
+            aiContent = '感谢你的提问！我已记录你的问题，相关解答如下：\n由于这是通用问答场景，如果你有具体的问题细节（如文件处理需求、功能使用疑问等），可以详细说明，我会为你提供更精准的回复～';
+          }
+          tokenCount = Math.floor(aiContent.length * 0.7);
+        } 
+        // 6. 感谢/告别场景
+        else if (userContent.includes('谢谢') || userContent.includes('感谢') || userContent.includes('再见') || userContent.includes('拜拜')) {
+          const thanksReplies = [
+            '不客气～ 有任何问题随时再来找我哦！',
+            '不用谢！能帮到你我很开心，祝你使用愉快～',
+            '再见啦～ 期待下次为你提供服务！如果有使用体验想反馈，也可以点击评价按钮告诉我们～',
+            '感谢你的使用！如有任何需要，欢迎随时回来咨询～'
+          ];
+          aiContent = thanksReplies[Math.floor(Math.random() * thanksReplies.length)];
+          tokenCount = Math.floor(aiContent.length * 0.7);
+        } 
+        // 7. 吐槽/建议场景
+        else if (userContent.includes('不好用') || userContent.includes('垃圾') || userContent.includes('建议') || userContent.includes('优化')) {
+          if (userContent.includes('不好用') || userContent.includes('垃圾')) {
+            aiContent = '非常抱歉给你带来了不好的使用体验～ 能否具体说明哪里需要改进？（如功能不够、操作复杂、回复不准确等）我们会重点优化这些问题，非常感谢你的反馈！';
+          } else {
+            aiContent = '非常感谢你的宝贵建议！我们已经记录下来，会在后续版本中进行优化。如果有更具体的改进方向，也可以详细说明，你的建议对我们很重要～';
+          }
+          tokenCount = Math.floor(aiContent.length * 0.7);
+        } 
+        // 8. 其他通用场景
+        else {
+          const generalReplies = [
+            '感谢你的消息！如果你有具体的问题或需求，可以详细说明，我会尽力为你解答～',
+            '你好呀！我是智能助手，支持文本问答、文件处理、功能咨询等服务，有什么可以帮你的？',
+            '看到你的消息啦～ 请具体描述你的需求（如"解析PDF文件"、"介绍核心功能"等），我会为你提供对应帮助～',
+            '欢迎使用智能助手！如需了解功能详情，可以发送"功能介绍"；如需上传文件，可以点击上传按钮，期待为你服务～'
+          ];
+          aiContent = generalReplies[Math.floor(Math.random() * generalReplies.length)];
           tokenCount = Math.floor(aiContent.length * 0.7);
         }
 
@@ -210,12 +279,8 @@ const Chat: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="tools-row">
-          <button className="rating-btn" onClick={openRating}>
-            评价一下本次使用如何
-          </button>
+          {/* 关键：添加滚动锚点（不可见元素） */}
+          <div ref={messageEndRef} />
         </div>
 
         <div className="input-area">
@@ -225,7 +290,11 @@ const Chat: React.FC = () => {
             onSend={handleSend}
             quickActions={[
               { label: '快速提问', onClick: () => chatInputRef.current?.setInput('请介绍一下核心功能') },
-              { label: '文件咨询', onClick: () => chatInputRef.current?.setInput('请解析这个文件的内容') }
+              { label: '文件咨询', onClick: () => chatInputRef.current?.setInput('请解析这个文件的内容') },
+              { 
+                label: '评价一下本次使用如何', 
+                onClick: openRating, 
+              }
             ]}
           />
         </div>
