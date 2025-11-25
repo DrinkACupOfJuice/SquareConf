@@ -9,7 +9,18 @@ interface Dialog {
   title: string;
 }
 
+<<<<<<< HEAD
 // 消息类型接口（新增时间、思考时间、token数字段、文件字段）
+=======
+// 对话列表数据（传递给Sidebar组件）
+const dialogs: Dialog[] = [
+  { id: '1', title: '对话1' },
+  { id: '2', title: '对话2' },
+  { id: '3', title: '对话3' },
+];
+
+// 消息类型接口（新增时间、思考时间、token数字段）
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
 interface Message {
   id: string;
   sender: 'user' | 'assistant';
@@ -29,18 +40,18 @@ const dialogs: Dialog[] = [
 
 const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
-    { 
-      id: '1', 
-      sender: 'assistant', 
-      content: '欢迎使用！有什么可以帮你的？', 
+    {
+      id: '1',
+      sender: 'assistant',
+      content: '欢迎使用！有什么可以帮你的？',
       time: formatTime(new Date()),
       thinkingTime: 0.8,
       tokenCount: 12
     },
-    { 
-      id: '2', 
-      sender: 'user', 
-      content: '请问如何使用这个功能？', 
+    {
+      id: '2',
+      sender: 'user',
+      content: '请问如何使用这个功能？',
       time: formatTime(new Date(Date.now() - 1000 * 30)) // 模拟30秒前发送
     },
   ]);
@@ -79,11 +90,16 @@ const Chat: React.FC = () => {
       setTimeout(() => {
         let aiContent = '';
         let tokenCount = 0;
+<<<<<<< HEAD
         
         if (hasFile) {
           aiContent = '我已收到你上传的文件！请告诉我你需要对这个文件进行什么操作（如解析内容、转换格式等），我会为你处理～';
           tokenCount = Math.floor(aiContent.length * 0.7);
         } else if (userContent.includes('使用')) {
+=======
+
+        if (userContent.includes('使用')) {
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
           aiContent = '你可以通过输入框发送消息与我互动，点击"评价一下本次使用如何"可提交评分和反馈，发送后我会及时回复你～';
           tokenCount = Math.floor(aiContent.length * 0.7);
         } else if (userContent.includes('评分')) {
@@ -160,8 +176,16 @@ const Chat: React.FC = () => {
       setScoreError('请输入1-100之间的数字');
       return;
     }
+<<<<<<< HEAD
     
     console.log('提交评价：', { 评分: num, 详细评价: ratingComment });
+=======
+
+    console.log('提交评价：', {
+      评分: num,
+      详细评价: ratingComment
+    });
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
     closeRating();
 
     // 评价后AI回复
@@ -178,14 +202,23 @@ const Chat: React.FC = () => {
 
   return (
     <div className="container">
+<<<<<<< HEAD
       <Sidebar dialogs={dialogs} activeKey="/chat" />
       
+=======
+      <Sidebar dialogs={dialogs} />
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
       <div className="chat-container">
         {/* 消息列表区域 */}
         <div className="message-list">
           {messages.map((msg) => (
+<<<<<<< HEAD
             <div 
               key={msg.id} 
+=======
+            <div
+              key={msg.id}
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
               className={`message ${msg.sender}`}
             >
               <div className="avatar"></div>
@@ -193,6 +226,10 @@ const Chat: React.FC = () => {
                 <div className="bubble-content">{msg.content}</div>
                 <div className="bubble-meta">
                   {msg.time}
+<<<<<<< HEAD
+=======
+                  {/* AI消息额外显示思考时间和token数 */}
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
                   {msg.sender === 'assistant' && (
                     <span className="ai-meta">
                       • 思考{msg.thinkingTime?.toFixed(1)}s • 调用{msg.tokenCount}token
@@ -204,6 +241,7 @@ const Chat: React.FC = () => {
           ))}
         </div>
 
+<<<<<<< HEAD
         {/* 输入区域（评价按钮 + ChatInput） */}
         <div className="tools-row">
           <button className="rating-btn" onClick={openRating}>
@@ -225,14 +263,47 @@ const Chat: React.FC = () => {
         </div>
 
         {/* 评价弹窗 */}
+=======
+        <div>
+          <button className="rating-btn" onClick={openRating}>
+            评价一下本次使用如何
+          </button>
+          <div className="uploader-wrapper">
+            <FileUploader />
+          </div>
+          <div className="input-row">
+            <input
+              type="text"
+              className="input-box"
+              placeholder="请输入"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            />
+            <button className="send-btn" onClick={handleSend}>
+              发送
+            </button>
+          </div>
+        </div>
+
+        {/* 评价弹窗（带滑动条1-100） */}
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
         {isRatingOpen && (
           <div className="rating-modal">
             <div className="modal-content">
               <button className="close-btn" onClick={closeRating}>×</button>
+<<<<<<< HEAD
               <h3 className="modal-title">请评价</h3>
               
               <div className="rating-input-group">
                 <label className="rating-label">评分（1-100）：</label>
+=======
+              <h3 className="modal-title">请评价本次使用</h3>
+
+              {/* 滑动条评分 */}
+              <div className="rating-input-group">
+                <label className="rating-label">评分(1-100)：</label>
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
                 <input
                   type="text"
                   className={`rating-input ${scoreError ? 'error' : ''}`}
@@ -243,6 +314,7 @@ const Chat: React.FC = () => {
                 />
                 {scoreError && <div className="error-message">{scoreError}</div>}
               </div>
+<<<<<<< HEAD
 
               <div className="comment-input-group">
                 <label className="comment-label">详细评价：</label>
@@ -255,6 +327,25 @@ const Chat: React.FC = () => {
                 ></textarea>
               </div>
 
+=======
+              {/* 详细评价输入 */}
+              <div className="comment-input-group">
+                <label className="comment-label">详细评价（可选）：</label>
+                <textarea
+                  className="comment-input"
+                  placeholder="请输入您的详细评价(最多500字)"
+                  value={ratingComment}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 500) setRatingComment(e.target.value);
+                    // 自动调整高度
+                    const target = e.target;
+                    target.style.height = 'auto';           // 重置高度
+                    target.style.height = target.scrollHeight + 'px'; // 设置为内容高度
+                  }}
+                ></textarea>
+                <div className="comment-count">{ratingComment.length}/500</div>
+              </div>
+>>>>>>> 00ab736065a7e590a0a59bfd717b2621729191d9
               <div className="modal-actions">
                 <button className="cancel-btn" onClick={closeRating}>取消</button>
                 <button className="submit-btn" onClick={submitRating}>提交</button>
