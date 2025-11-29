@@ -4,9 +4,9 @@ import './FileUploader.css';
 
 // 定义上传成功后的文件类型（与接口返回匹配）
 interface UploadedFile {
-  id: string; // 对应接口返回的 file_id（真实 UUID）
+  id: string; // 对应接口返回的 file_id
   name: string; // 原始文件名
-  url: string; // 文件访问路径（用于下载）
+  url: string; // 文件访问路径（用于下载，可选）
   type: string; // 文件类型（用于区分文件类型）
   shortName: string; // 缩短后的文件名（10个字符含后缀）
 }
@@ -21,35 +21,20 @@ interface FileUploaderProps {
 const defaultProps: FileUploaderProps = {
   maxCount: undefined,
   accept: ".pdf,.doc,.docx,.jpg,.png,.jpeg,.gif,.svg,.xls,.xlsx,.ppt,.pptx",
-  onUploadSuccess: () => {},
+  onUploadSuccess: () => { },
 };
 
 // 工具函数：缩短文件名到10个字符（含文件类型后缀）
 const shortenFileName = (fileName: string): string => {
-  // 分离文件名和后缀
   const lastDotIndex = fileName.lastIndexOf('.');
   if (lastDotIndex === -1) {
-    // 无后缀文件，直接截断
     return fileName.length > 10 ? `${fileName.substring(0, 10)}...` : fileName;
   }
-
   const nameWithoutExt = fileName.substring(0, lastDotIndex);
-  const ext = fileName.substring(lastDotIndex); // 包含点号的后缀（如.pdf）
-  
-  // 计算可分配给文件名的长度（总长度10 - 后缀长度）
+  const ext = fileName.substring(lastDotIndex);
   const maxNameLength = 10 - ext.length;
-  
-  if (maxNameLength <= 0) {
-    // 后缀过长，直接显示后缀（最多显示10个字符）
-    return ext.substring(0, 10);
-  }
-
-  if (nameWithoutExt.length <= maxNameLength) {
-    // 文件名+后缀不超过10个字符，直接返回
-    return fileName;
-  }
-
-  // 截断文件名，拼接后缀
+  if (maxNameLength <= 0) return ext.substring(0, 10);
+  if (nameWithoutExt.length <= maxNameLength) return fileName;
   return `${nameWithoutExt.substring(0, maxNameLength)}...${ext}`;
 };
 
@@ -59,8 +44,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   accept = defaultProps.accept,
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [uploadingFiles, setUploadingFiles] = useState<string[]>([]); // 正在上传的文件名数组
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]); // 已上传文件数组
+  const [uploadingFiles, setUploadingFiles] = useState<string[]>([]); // 正在上传的文件名
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]); // 已上传文件
   const [errorMsg, setErrorMsg] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // 弹窗显示/隐藏状态
   const modalRef = useRef<HTMLDivElement | null>(null); // 弹窗ref，用于点击外部关闭
@@ -75,24 +60,16 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         setIsModalOpen(false);
       }
     };
-
-    if (isModalOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    if (isModalOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isModalOpen]);
 
   // 阻止弹窗内部事件冒泡
-  const stopPropagation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
+  const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
   // 触发文件选择框
   const handleAttachClick = () => {
-    if (uploadingFiles.length > 0) return; // 正在上传时禁止选择新文件
+    if (uploadingFiles.length > 0) return; // 正在上传禁止选择
     if (!canUploadMore) {
       setErrorMsg(`最多只能上传 ${maxCount} 个文件`);
       return;
@@ -106,50 +83,40 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // 过滤已存在的文件（根据文件名去重）
     const newFiles = Array.from(files).filter(
       (file) => !uploadedFiles.some((f) => f.name === file.name)
     );
 
-    // 检查是否超过最大数量限制
     if (maxCount && uploadedFiles.length + newFiles.length > maxCount) {
       setErrorMsg(`最多只能上传 ${maxCount} 个文件，当前已选择 ${uploadedFiles.length} 个`);
       e.target.value = '';
       return;
     }
-
     if (newFiles.length === 0) {
       setErrorMsg('所选文件已全部上传');
       e.target.value = '';
       return;
     }
 
-    // 设置正在上传的文件
     const uploadingFilenames = newFiles.map((file) => file.name);
     setUploadingFiles(uploadingFilenames);
     setErrorMsg('');
 
     try {
-      // 批量上传文件（并行上传）
       const uploadPromises = newFiles.map(async (file) => {
         const res: UploadFileResponse = await uploadFile(file);
         return {
           id: res.data.file_id,
           name: file.name,
-          url: res.data.url || '',
+          url: res.data.url || '', // 新接口 url 可选
           type: file.type,
-          shortName: shortenFileName(file.name), // 生成缩短后的文件名
+          shortName: shortenFileName(file.name),
         } as UploadedFile;
       });
 
-      // 等待所有文件上传完成
       const newUploadedFiles = await Promise.all(uploadPromises);
-      
-      // 更新已上传文件列表
       const updatedFiles = [...uploadedFiles, ...newUploadedFiles];
       setUploadedFiles(updatedFiles);
-      
-      // 通知父组件
       onUploadSuccess?.(updatedFiles);
 
       alert(`✅ 成功上传 ${newUploadedFiles.length} 个文件！`);
@@ -160,22 +127,17 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       alert(`❌ ${errMsg}`);
     } finally {
       setUploadingFiles([]);
-      e.target.value = ''; // 清空文件选择框
+      e.target.value = '';
     }
   };
 
-  // 处理单个文件删除
+  // 删除单个文件
   const handleDeleteFile = async (fileId: string) => {
     try {
       await deleteFile(fileId);
-      
-      // 从已上传文件列表中移除该文件
       const updatedFiles = uploadedFiles.filter((file) => file.id !== fileId);
       setUploadedFiles(updatedFiles);
-      
-      // 通知父组件
       onUploadSuccess?.(updatedFiles);
-
       alert('🗑️ 文件已成功删除');
     } catch (error: any) {
       const errMsg = error.message || '删除失败，请重试';
@@ -185,17 +147,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     }
   };
 
-  // 处理全部文件删除
+  // 删除所有文件
   const handleDeleteAll = async () => {
     if (uploadedFiles.length === 0) return;
     if (!window.confirm('确定要删除所有已上传文件吗？')) return;
-
     try {
-      // 批量删除所有文件
       await Promise.all(uploadedFiles.map((file) => deleteFile(file.id)));
-      
       setUploadedFiles([]);
-      setIsModalOpen(false); // 删除后关闭弹窗
+      setIsModalOpen(false);
       onUploadSuccess?.([]);
       alert('🗑️ 所有文件已成功删除');
     } catch (error: any) {
@@ -208,24 +167,19 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
   // 打开文件列表弹窗
   const openFileModal = () => {
-    if (uploadedFiles.length > 1) {
-      setIsModalOpen(true);
-    }
+    if (uploadedFiles.length > 1) setIsModalOpen(true);
   };
 
-  // 关闭弹窗
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
-  // 获取文件图标（根据文件类型）
+  // 文件图标
   const getFileIcon = (fileType: string) => {
     if (fileType.startsWith('image/')) return '🖼️';
     if (fileType.includes('pdf')) return '📄';
     if (fileType.includes('word')) return '📝';
     if (fileType.includes('excel')) return '📊';
     if (fileType.includes('powerpoint')) return '🎥';
-    return '📎'; // 默认图标
+    return '📎';
   };
 
   // 下载文件
@@ -246,19 +200,15 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     <div className="file-uploader-container">
       {/* 核心区域：上传按钮 + 已上传文件 */}
       <div className="main-content">
-        {/* 上传按钮区域 */}
         <div className="upload-btn-wrapper">
-          {/* 隐藏的文件选择输入框（支持多文件） */}
           <input
             type="file"
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileChange}
             accept={accept}
-            multiple // 开启多文件选择
+            multiple
           />
-
-          {/* 上传按钮 */}
           <button
             className="attach-btn"
             onClick={handleAttachClick}
@@ -269,16 +219,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           </button>
         </div>
 
-        {/* 已上传文件区域 */}
         {uploadedFiles.length > 0 && (
           <div className="uploaded-files-inline">
-            {/* 单个文件：直接显示（10字符文件名） */}
             {uploadedFiles.length === 1 ? (
               <div className="single-file-item">
-                <div 
-                  className="file-info" 
+                <div
+                  className="file-info"
                   onClick={() => handleDownloadFile(uploadedFiles[0].url, uploadedFiles[0].name)}
-                  title={uploadedFiles[0].name} //  hover显示完整文件名
+                  title={uploadedFiles[0].name}
                 >
                   <span className="file-icon">{getFileIcon(uploadedFiles[0].type)}</span>
                   <span className="file-name">{uploadedFiles[0].shortName}</span>
@@ -294,40 +242,30 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                 </button>
               </div>
             ) : (
-              // 多个文件：显示数量+查看全部（点击打开弹窗）
-              <div 
+              <div
                 className="multi-file-trigger"
                 onClick={openFileModal}
                 title={`共${uploadedFiles.length}个文件，点击查看全部`}
               >
-                <span className="file-count">
-                  📎 {uploadedFiles.length}个文件
-                </span>
+                <span className="file-count">📎 {uploadedFiles.length}个文件</span>
                 <span className="view-all-text">查看全部</span>
               </div>
             )}
           </div>
         )}
 
-        {/* 错误提示 */}
         {errorMsg && <div className="upload-error">{errorMsg}</div>}
       </div>
 
       {/* 文件列表弹窗 */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div 
-            className="file-modal" 
-            ref={modalRef}
-            onClick={stopPropagation}
-          >
-            {/* 弹窗头部 */}
+          <div className="file-modal" ref={modalRef} onClick={stopPropagation}>
             <div className="modal-header">
               <h3>已上传文件（{uploadedFiles.length} 个）</h3>
               <button className="close-modal-btn" onClick={closeModal} title="关闭">×</button>
             </div>
 
-            {/* 弹窗操作区 */}
             <div className="modal-actions">
               <button
                 className="delete-all-btn"
@@ -338,7 +276,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
               </button>
             </div>
 
-            {/* 弹窗内容：文件列表（10字符文件名） */}
             <div className="modal-content">
               {uploadedFiles.length > 0 ? (
                 <div className="modal-file-list">
@@ -346,9 +283,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                     <div key={file.id} className="modal-file-item">
                       <div className="file-icon">{getFileIcon(file.type)}</div>
                       <div className="file-details">
-                        <span 
-                          className="file-name" 
-                          title={file.name} // hover显示完整文件名
+                        <span
+                          className="file-name"
+                          title={file.name}
                           onClick={() => handleDownloadFile(file.url, file.name)}
                         >
                           {file.name}
@@ -382,7 +319,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         </div>
       )}
 
-      {/* 上传中状态提示*/}
       {uploadingFiles.length > 0 && (
         <div className="uploading-status">
           <span>正在上传：{uploadingFiles.map(shortenFileName).join('、')}</span>
@@ -392,5 +328,5 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   );
 };
 
-//FileUploader.defaultProps = defaultProps;
+// FileUploader.defaultProps = defaultProps;
 export default FileUploader;
