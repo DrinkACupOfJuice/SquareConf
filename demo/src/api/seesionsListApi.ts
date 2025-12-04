@@ -1,5 +1,5 @@
 // src/api/sessionsApi.ts
-import request from './Fileapi'; // axios 实例或你自己封装的请求工具
+import request from './Fileapi';
 
 /** ===================== 类型定义 ===================== */
 export interface Session {
@@ -7,7 +7,7 @@ export interface Session {
     name: string;
     timestamp: number;
     latest_job_id: string;
-    knowledgebase_id?: string; // 可选，创建会话时可能会返回
+    knowledgebase_id?: string;
 }
 
 export interface ApiResponse<T> {
@@ -18,54 +18,46 @@ export interface ApiResponse<T> {
 
 /** ===================== 会话列表相关 API ===================== */
 
-/*获取所有会话（历史列表）*/
-export const getAllSessions = async (): Promise<ApiResponse<Session[]>> => {
-    const res = await request.get('/sessions'); // 替换为实际接口路径
+/** 获取所有会话列表 */
+export const getAllSessions = async (
+    page?: number,
+    size?: number
+): Promise<ApiResponse<Session[]>> => {
+    const res = await request.get('/sessions', {
+        params: { page, size }
+    });
     return res.data;
 };
 
-/**
- * 创建新会话
- * @param knowledgebase_id 可选知识库 ID
- */
+/** 创建新会话 */
 export const createSession = async (
-    knowledgebase_id?: string
+    name: string
 ): Promise<ApiResponse<Session>> => {
-    const res = await request.post('/sessions', { knowledgebase_id });
+    const res = await request.post('/sessions', { name });
     return res.data;
 };
 
-/**
- * 获取指定 ID 的会话
- * @param id 会话 ID
- */
+/** 获取指定 ID 的会话 */
 export const getSessionById = async (
-    id: string
+    session_id: string
 ): Promise<ApiResponse<Session>> => {
-    const res = await request.get(`/sessions/${id}`);
+    const res = await request.get(`/sessions/${session_id}`);
     return res.data;
 };
 
-/**
- * 更新指定 ID 的会话
- * @param id 会话 ID
- * @param payload 可更新字段，例如 { name: "新会话名称" }
- */
+/** 更新指定 ID 的会话 */
 export const updateSession = async (
-    id: string,
-    payload: Partial<Pick<Session, 'name'>>
+    session_id: string,
+    name: string
 ): Promise<ApiResponse<Session>> => {
-    const res = await request.patch(`/sessions/${id}`, payload);
+    const res = await request.put(`/sessions/${session_id}`, { name });
     return res.data;
 };
 
-/**
- * 删除指定 ID 的会话
- * @param id 会话 ID
- */
+/** 删除指定 ID 的会话 */
 export const deleteSession = async (
-    id: string
+    session_id: string
 ): Promise<ApiResponse<{}>> => {
-    const res = await request.delete(`/sessions/${id}`);
+    const res = await request.delete(`/sessions/${session_id}`);
     return res.data;
 };

@@ -7,7 +7,7 @@ import {
   addFileToKnowledgeBase,
   deleteFileFromKnowledgeBase,
   KnowledgeBaseRaw,
-} from "../../api/KnowledgeBaseApi";
+} from "../../api/knowledgeBaseApi";
 import './KnowledgeBaseManager.css';
 
 interface KBFile {

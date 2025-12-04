@@ -24,10 +24,8 @@ export interface DeleteFileResponse {
 /** 上传文件接口 */
 export const uploadFile = async (file: File): Promise<UploadFileResponse> => {
   if (!file) throw new Error("请选择要上传的文件");
-
   const formData = new FormData();
   formData.append("file", file);
-
   try {
     const response = await request.post<UploadFileResponse>("/files", formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -52,12 +50,9 @@ export const uploadFile = async (file: File): Promise<UploadFileResponse> => {
 /** 删除文件接口 */
 export const deleteFile = async (fileId: string): Promise<DeleteFileResponse> => {
   if (!fileId) throw new Error("文件 ID 不能为空");
-
   try {
     // 保留原 /files/<file_id> 调用形式
-    const response = await request.delete<DeleteFileResponse>("/files/<file_id>", {
-      params: { file_id: fileId },
-    });
+    const response = await request.delete<DeleteFileResponse>(`/files/${fileId}`);
 
     return {
       code: response.data.code,
@@ -72,4 +67,3 @@ export const deleteFile = async (fileId: string): Promise<DeleteFileResponse> =>
 };
 
 export default request;
-

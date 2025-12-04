@@ -1,7 +1,9 @@
 import request from "./Fileapi";
 import { uploadFile } from "./Fileapi";
 
-// 定义后端知识库原始格式
+// ==================== 类型定义 ====================
+
+// 知识库对象标准格式
 export interface KnowledgeBaseRaw {
   id: string;
   name: string;
@@ -17,6 +19,8 @@ export interface KBFilePayload {
   name?: string;
   size?: number;
 }
+
+// ==================== 工具函数 ====================
 
 /**
  * 提取后端返回的知识库列表
@@ -46,7 +50,6 @@ const extractListFromResponse = (res: any): any[] => {
 
 /**
  * 统一知识库格式
- * - 确保 id, name, description, file_count 可用
  */
 const normalizeKbItem = (item: any): KnowledgeBaseRaw => {
   if (!item || typeof item !== "object") return null as any;
@@ -59,14 +62,12 @@ const normalizeKbItem = (item: any): KnowledgeBaseRaw => {
   };
 };
 
+// ==================== 知识库接口 ====================
+
 /** 获取所有知识库 */
 export const getAllKnowledgeBases = async (): Promise<KnowledgeBaseRaw[]> => {
   const res = await request.get("/knowledgebases/");
-
-  // 提取后端可能的多种返回结构
   const rawList = extractListFromResponse(res);
-
-  // 如果返回是字符串，尝试解析 JSON
   const parsedList = rawList.map((it: any) => {
     if (typeof it === "string") {
       try {
@@ -77,20 +78,20 @@ export const getAllKnowledgeBases = async (): Promise<KnowledgeBaseRaw[]> => {
     }
     return it;
   });
-
-  // 统一格式化
-  const normalized = parsedList.map(normalizeKbItem).filter(Boolean) as KnowledgeBaseRaw[];
-  return normalized;
+  return parsedList.map(normalizeKbItem).filter(Boolean) as KnowledgeBaseRaw[];
 };
 
-/** 删除指定知识库 */
-export const deleteKnowledgeBase = async (kbId: string) => {
-  const res = await request.delete(`/knowledgebases/${kbId}`);
+/** 删除指定知识库*/
+export const deleteKnowledgeBase = async (kbId: string, drop: boolean = false) => {
+  const res = await request.delete(`/knowledgebases/${kbId}`, {
+    params: { drop },
+  });
   return res.data;
 };
 
-/** 上传文件到指定知识库 */
+/** 上传文件到指定知识库*/
 export const addFileToKnowledgeBase = async (kbId: string, file: File) => {
+  // 上传文件获取 file_id
   const uploadRes = await uploadFile(file);
   const uploadData = uploadRes?.data ?? uploadRes;
   const fileId = uploadData?.file_id ?? uploadData?.id ?? null;
@@ -98,31 +99,22 @@ export const addFileToKnowledgeBase = async (kbId: string, file: File) => {
 
   if (!fileId) throw new Error("上传后未返回 file_id");
 
-  try {
-    // 兼容多种接口写法
-    const res = await request.post(`/knowledgebases/${kbId}/files/${fileId}`, {
-      name: file.name,
-      size: file.size,
-      url: fileUrl,
-    });
-    return res.data;
-  } catch (err) {
-    // 有些接口可能要求直接 POST 到 /files
-    const res2 = await request.post(`/knowledgebases/${kbId}/files`, {
-      file_id: fileId,
-      name: file.name,
-      size: file.size,
-      url: fileUrl,
-    });
-    return res2.data;
-  }
+  // POST 到 /knowledgebases/:knowledge_base_id/files/:file_id
+  const res = await request.post(`/knowledgebases/${kbId}/files/${fileId}`, {
+    name: file.name,
+    size: file.size,
+    url: fileUrl,
+  });
+
+  return res.data;
 };
 
-/** 删除知识库中的文件 */
+/** 删除指定知识库中的文件*/
 export const deleteFileFromKnowledgeBase = async (kbId: string, fileId: string) => {
   const res = await request.delete(`/knowledgebases/${kbId}/files/${fileId}`);
   return res.data;
 };
+
 
 
 

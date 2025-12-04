@@ -71,14 +71,7 @@ export interface SessionMessageViewResponse {
 }
 
 export interface JobMessageViewResponse {
-    data: {
-        question: Question;
-        answer: Answer;
-        answer_metrics: AnswerMetrics;
-        thinking_messages: ThinkingMessage[];
-        thinking_subjobs: ThinkingSubjob[];
-        thinking_metrics: ThinkingMetrics[];
-    };
+    data: SessionMessageItem;
     message: string;
     code: number;
 }
