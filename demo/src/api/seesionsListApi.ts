@@ -22,18 +22,22 @@ export interface ApiResponse<T> {
 export const getAllSessions = async (
     page?: number,
     size?: number
-): Promise<ApiResponse<Session[]>> => {
-    const res = await request.get('/sessions', {
-        params: { page, size }
-    });
-    return res.data;
+): Promise<Session[]> => {
+    try {
+        const res = await request.get('/sessions/', { params: { page, size } });
+        // 返回接口 data 字段数组
+        return Array.isArray(res.data?.data) ? res.data.data : [];
+    } catch (err) {
+        console.error('获取会话列表失败', err);
+        return [];
+    }
 };
 
 /** 创建新会话 */
 export const createSession = async (
     name: string
 ): Promise<ApiResponse<Session>> => {
-    const res = await request.post('/sessions', { name });
+    const res = await request.post('/sessions/', { name });
     return res.data;
 };
 

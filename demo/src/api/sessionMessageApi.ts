@@ -55,6 +55,7 @@ export interface ThinkingMetrics {
     tokens: number;
 }
 
+// 会话消息结构
 export interface SessionMessageItem {
     question: Question;
     answer: Answer;
@@ -76,16 +77,41 @@ export interface JobMessageViewResponse {
     code: number;
 }
 
+// ======================== 工具函数：兼容 Mock + 后端 ========================
+function extractData<T>(res: any): T {
+    return res?.data?.data ?? res?.data ?? res;
+}
+
 // ======================== 会话消息视图接口 ========================
 
-/** 获取会话消息视图 */
-export const getSessionMessageView = async (sessionId: string): Promise<SessionMessageViewResponse> => {
-    const res = await request.get(`/sessions/${sessionId}/messages`);
-    return res.data;
+/** 获取会话消息视图（/sessions/<session_id>/messages） */
+export const getSessionMessageView = async (
+    sessionId: string
+): Promise<SessionMessageViewResponse> => {
+
+    const res = await request.get(`/sessions/${sessionId}/messages`, {
+        params: { session_id: sessionId }
+    });
+
+    return {
+        code: res.data.code,
+        message: res.data.message,
+        data: extractData<SessionMessageItem[]>(res)
+    };
 };
 
-/** 获取指定任务的消息视图 */
-export const getJobMessageView = async (jobId: string): Promise<JobMessageViewResponse> => {
-    const res = await request.get(`/jobs/${jobId}/messages`);
-    return res.data;
+/** 获取指定任务的消息视图（/jobs/<job_id>/message） */
+export const getJobMessageView = async (
+    jobId: string
+): Promise<JobMessageViewResponse> => {
+
+    const res = await request.get(`/jobs/${jobId}/message`, {
+        params: { job_id: jobId }
+    });
+
+    return {
+        code: res.data.code,
+        message: res.data.message,
+        data: extractData<SessionMessageItem>(res)
+    };
 };

@@ -1,0 +1,22 @@
+.session-messages__container {
+    padding: 10px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.session-messages__item {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.session-messages__question,
+.session-messages__answer,
+.session-messages__thinking {
+    margin: 4px 0;
+}
+
+.session-messages__thinking ul {
+    margin: 0;
+    padding-left: 16px;
+}

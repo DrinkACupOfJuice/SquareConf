@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import ChatInput from '../../components/Chatinput/Chatinput';
+import ChatInput from '../../components/Chatinput/ChatInput';
 import './home.css';
-
-interface Dialog {
-  id: string;
-  title: string;
-}
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -17,16 +12,9 @@ const Home: React.FC = () => {
   const typingRef = useRef<number | null>(null);
   // 新增：标记是否已开始打字（用于控制占位框显示）
   const [isTypingStarted, setIsTypingStarted] = useState(false);
-  
+
   // 打字速度（毫秒/字），可调整
   const typingSpeed = 150;
-
-  // 对话框数据（保持不变）
-  const dialogs: Dialog[] = [
-    { id: '1', title: '对话1' },
-    { id: '2', title: '对话2' },
-    { id: '3', title: '对话3' },
-  ];
 
   // 根据时间获取问候语
   useEffect(() => {
@@ -42,7 +30,7 @@ const Home: React.FC = () => {
         return '夜深了，'; // 凌晨时段
       }
     };
-    
+
     const greeting = getGreeting();
     setGreetingText(greeting);
     // 问候语获取完成后，标记开始打字（触发占位框切换）
@@ -66,7 +54,7 @@ const Home: React.FC = () => {
     }
 
     if (currentIndex < fullText.length) {
-      typingRef.current = setTimeout(() => {
+      typingRef.current = window.setTimeout(() => {
         setDisplayText(prev => prev + fullText[currentIndex]);
         setCurrentIndex(prev => prev + 1);
       }, typingSpeed);
@@ -81,7 +69,8 @@ const Home: React.FC = () => {
 
   return (
     <div className="container">
-      <Sidebar dialogs={dialogs} activeKey="/home" />
+      {/* Sidebar 自包含会话列表 */}
+      <Sidebar />
 
       <main className="home-main">
         {/* 关键改动：添加占位框容器，通过 isTypingStarted 控制显示 */}
@@ -101,7 +90,7 @@ const Home: React.FC = () => {
             </div>
           )}
         </div>
-        
+
         <ChatInput
           placeholder="输入内容..."
           onSend={handleSend}
