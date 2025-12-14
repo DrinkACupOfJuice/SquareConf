@@ -1,0 +1,46 @@
+.graphdb-item {
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.graphdb-item.active {
+    background: rgba(22, 119, 255, 0.2);
+    border-left: 3px solid #1677ff;
+}
+
+.graphdb-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.using-tag {
+    font-size: 10px;
+    color: #1677ff;
+}
+
+.graphdb-actions {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+}
+
+.graphdb-actions button {
+    font-size: 11px;
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.graphdb-actions .danger {
+    color: #ff4d4f;
+}
+
+.graphdb-add {
+    margin-top: 8px;
+    width: 100%;
+    font-size: 12px;
+}

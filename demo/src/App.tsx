@@ -11,7 +11,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat/:sessionId" element={<Chat />} />
         <Route path="/manager" element={<Manager />} />
         <Route path="/knowledge-base" element={<KnowledgeBaseManager />} />
         <Route path="*" element={<Navigate to="/home" replace />} />

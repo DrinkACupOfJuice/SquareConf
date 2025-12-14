@@ -97,7 +97,7 @@ export const getSessionMessageView = async (
     if (!sessionId) {
       throw new Error('sessionId 不能为空');
     }
-    const res = await request.get(`/sessions/<session_id>/messages?session_id=${sessionId}`);
+    const res = await request.get(`/sessions/${sessionId}/messages`);
     return {
       code: res.data.code ?? 200,
       message: res.data.message ?? '请求成功',
