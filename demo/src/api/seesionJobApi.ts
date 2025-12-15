@@ -45,9 +45,22 @@ export const chatWithSession = async (
   sessionId: string,
   message: string
 ): Promise<ChatResponse> => {
-  const body = { payload: message };
+  const body = {
+    instruction_message: {
+      payload: message,
+      session_id: sessionId,
+      timestamp: Date.now(),
+      message_type: "TEXT",
+      assigned_expert_name: null
+    },
+    attached_messages: []
+  };
 
-  const res = await request.post(`/sessions/${sessionId}/chat`, body);
+  const res = await request.post(
+    `/sessions/${sessionId}/chat`,
+    body
+  );
+
   return res.data;
 };
 
