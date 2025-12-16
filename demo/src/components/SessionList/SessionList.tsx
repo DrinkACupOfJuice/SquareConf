@@ -267,14 +267,21 @@ const SessionList: React.FC<SessionListProps> = ({ isSidebarExpanded }) => {
                 onChange={e => setNewSessionName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleCreateSession()}
                 autoFocus
+                className="sessionlist__modal-input"
               />
               <div className="sessionlist__modal-btns">
-                <button onClick={handleCreateSession}>创建</button>
+                <button 
+                  onClick={handleCreateSession}
+                  className='sessionlist__new-btn'
+                >
+                  创建
+                </button>
                 <button
                   onClick={() => {
                     setIsCreateModalOpen(false);
                     setNewSessionName('');
                   }}
+                  className='sessionlist__new-btn'
                 >
                   取消
                 </button>

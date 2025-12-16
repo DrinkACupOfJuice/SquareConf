@@ -58,7 +58,7 @@ const SessionMessages: React.FC<SessionMessagesProps> = ({ sessionId }) => {
         return (
             <div className="session-messages__error">{error}</div>
         );
-    if (!messages.length)
+    if (!messages.length&&!loading)
         return (
             <div className="session-messages__empty">暂无消息</div>
         );
