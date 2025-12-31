@@ -5,7 +5,7 @@ const request = axios.create({
   timeout: 10000,
 });
 
-/** 上传文件响应类型定义 */
+/** 上传文件响应类型定义 http://127.0.0.1:4523/m1/7369421-7101291-default*/
 export interface UploadFileResponse {
   code: number;
   message: string;
@@ -15,7 +15,7 @@ export interface UploadFileResponse {
   };
 }
 
-/** 删除文件响应类型定义 */
+/** 删除文件响应类型定义 http://60.205.246.195:3000/api*/
 export interface DeleteFileResponse {
   code: number;
   message: string;

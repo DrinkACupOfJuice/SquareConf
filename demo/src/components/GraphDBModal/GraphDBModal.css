@@ -1,142 +1,338 @@
-.gdb-modal {
+/* 弹窗遮罩 */
+.gdb-modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 1000;
+    justify-content: center;
+    z-index: 999;
+    animation: gdb-fadeIn 0.2s ease;
 }
 
-.gdb-modal-content {
-    background: #fff;
-    border-radius: 12px;
-    padding: 24px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+/* 弹窗内容容器 */
+.gdb-modal {
+    background: #ffffff;
+    width: 600px;
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: gdb-popupIn 0.25s ease;
     display: flex;
     flex-direction: column;
-    position: relative;
 }
 
-.gdb-modal-title {
-    font-size: 18px;
+/* 弹窗标题区域 */
+.gdb-modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e6e6e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gdb-modal-header h3 {
+    margin: 0;
+    font-size: 19px;
     font-weight: 600;
-    text-align: center;
-    margin-bottom: 20px;
+    color: #333;
 }
 
-.gdb-close-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: transparent;
+/* 关闭按钮 */
+.gdb-modal-close {
+    position: relative;
+    top: 0;
+    right: 0;
+    font-size: 22px;
     border: none;
-    font-size: 20px;
+    background: none;
     cursor: pointer;
-    transition: color 0.2s;
+    color: #777;
+    transition: 0.2s;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
-.gdb-close-btn:hover {
-    color: #ff4d4f;
+.gdb-modal-close:hover {
+    color: #000;
+    background: #f5f5f5;
 }
 
+/* 弹窗主体内容 */
+.gdb-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* 列表模式样式 */
 .gdb-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
-    margin-bottom: 20px;
+    padding-right: 4px;
 }
 
+.gdb-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.gdb-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 14px;
+}
+
+/* 数据库项样式 */
 .gdb-item {
     background: #f9f9f9;
-    padding: 12px 16px;
-    border-radius: 8px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid #e8e8e8;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    transition: background 0.2s;
-}
-
-.gdb-item:hover {
-    background: #eef3ff;
-}
-
-.gdb-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.gdb-name {
-    font-weight: 500;
-}
-
-.gdb-tag {
-    background: #1890ff;
-    color: #fff;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.gdb-actions button {
-    background: #fff;
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
-    padding: 4px 10px;
-    margin-left: 8px;
-    cursor: pointer;
+    align-items: flex-start;
     transition: all 0.2s;
 }
 
-.gdb-actions button:hover {
-    background: #1890ff;
-    color: #fff;
-    border-color: #1890ff;
+.gdb-item:hover {
+    border-color: #409eff;
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.1);
 }
 
-.gdb-modal-actions {
+.gdb-info {
+    flex: 1;
+}
+
+.gdb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.gdb-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.gdb-header-tags {
+    display: flex;
+    gap: 6px;
+}
+
+.default-tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    background: #52c41a;
+    color: white;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.gdb-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 13px;
+    color: #666;
+}
+
+.gdb-type {
+    background: #e6f7ff;
+    color: #1890ff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.gdb-address {
+    color: #595959;
+    background: #f5f5f5;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.gdb-desc {
+    color: #8c8c8c;
+    font-style: italic;
+    background: #fafafa;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    display: inline-block;
+}
+
+/* 操作按钮 */
+.gdb-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-left: 12px;
+}
+
+.gdb-actions button {
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1.5px solid #dcdfe6;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.gdb-actions button:hover:not(:disabled) {
+    border-color: #409eff;
+    color: #409eff;
+    background: #f0f9ff;
+}
+
+.gdb-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.gdb-actions .danger {
+    color: #f5222d;
+    border-color: #ffa39e;
+}
+
+.gdb-actions .danger:hover:not(:disabled) {
+    background: #fff1f0;
+    border-color: #f5222d;
+    color: #f5222d;
+}
+
+/* 弹窗操作按钮区域 */
+.gdb-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e6e6e6;
     display: flex;
     justify-content: flex-end;
     gap: 12px;
 }
 
-.gdb-cancel-btn {
-    background: #f5f5f5;
-    border: none;
-    padding: 6px 16px;
-    border-radius: 6px;
+.gdb-modal-cancel {
+    padding: 8px 18px;
+    background: #f4f4f5;
+    border: 1.5px solid #dcdfe6;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
 }
 
-.gdb-cancel-btn:hover {
-    background: #e6e6e6;
+.gdb-modal-cancel:hover {
+    border-color: #c0c4cc;
+    background: #e8e8e8;
 }
 
-.gdb-submit-btn {
-    background: #1890ff;
+.gdb-modal-submit {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #409eff;
     color: #fff;
-    border: none;
-    padding: 6px 16px;
-    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     transition: background 0.2s;
 }
 
-.gdb-submit-btn:hover {
-    background: #40a9ff;
+.gdb-modal-submit:hover {
+    background: #318ae3;
 }
 
-.gdb-empty {
-    text-align: center;
-    color: #888;
-    padding: 12px;
+/* 表单样式 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #dcdfe6;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.15);
+    outline: none;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #444;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+/* 动画 */
+@keyframes gdb-fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gdb-popupIn {
+    from {
+        transform: translateY(-8px) scale(0.97);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
 }

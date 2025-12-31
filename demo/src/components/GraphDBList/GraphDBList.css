@@ -1,46 +1,298 @@
+.graphdb-wrapper {
+    padding: 12px;
+}
+
+.graphdb-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.graphdb-loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 13px;
+}
+
 .graphdb-item {
-    padding: 8px;
-    margin-bottom: 6px;
-    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border: 1px solid #e8e8e8;
+    background: #fff;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.graphdb-item:hover {
+    border-color: #1677ff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .graphdb-item.active {
-    background: rgba(22, 119, 255, 0.2);
-    border-left: 3px solid #1677ff;
+    background: rgba(22, 119, 255, 0.08);
+    border-color: #1677ff;
+    border-left: 4px solid #1677ff;
 }
 
 .graphdb-header {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
+    align-items: center;
+    margin-bottom: 6px;
 }
 
-.using-tag {
-    font-size: 10px;
-    color: #1677ff;
+.graphdb-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
 }
 
-.graphdb-actions {
-    margin-top: 6px;
+.graphdb-header-tags {
     display: flex;
     gap: 6px;
 }
 
+.default-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    background: #52c41a;
+    color: white;
+    border-radius: 10px;
+}
+
+.using-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    background: #1677ff;
+    color: white;
+    border-radius: 10px;
+}
+
+.graphdb-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.graphdb-type {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.graphdb-address {
+    color: #888;
+}
+
+.graphdb-desc {
+    color: #999;
+    font-style: italic;
+}
+
+.graphdb-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 .graphdb-actions button {
-    font-size: 11px;
-    background: none;
-    border: none;
-    color: #aaa;
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    border-radius: 4px;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.graphdb-actions button:hover:not(:disabled) {
+    border-color: #1677ff;
+    color: #1677ff;
+}
+
+.graphdb-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .graphdb-actions .danger {
     color: #ff4d4f;
+    border-color: #ff4d4f;
+}
+
+.graphdb-actions .danger:hover:not(:disabled) {
+    background: #ff4d4f;
+    color: white;
 }
 
 .graphdb-add {
-    margin-top: 8px;
+    margin-top: 12px;
     width: 100%;
-    font-size: 12px;
+    padding: 10px;
+    font-size: 13px;
+    background: #1677ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.graphdb-add:hover {
+    background: #0958d9;
+}
+
+/* 模态框样式 */
+.graphdb-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.graphdb-modal {
+    background: white;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.graphdb-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.graphdb-modal-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.graphdb-modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.graphdb-modal-close:hover {
+    color: #333;
+}
+
+.graphdb-modal-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1677ff;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.graphdb-modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.graphdb-modal-cancel {
+    padding: 8px 16px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #666;
+}
+
+.graphdb-modal-cancel:hover {
+    border-color: #1677ff;
+    color: #1677ff;
+}
+
+.graphdb-modal-submit {
+    padding: 8px 16px;
+    border: none;
+    background: #1677ff;
+    color: white;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.graphdb-modal-submit:hover {
+    background: #0958d9;
 }

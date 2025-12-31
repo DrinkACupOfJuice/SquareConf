@@ -22,11 +22,13 @@ interface Message {
   file?: { id?: string; name?: string; url?: string };
 }
 
+// 与API返回的Session类型保持一致
 interface SessionSummary {
-  session_id: string;
-  title: string;
-  lastMessageTime?: string;
-  messageCount?: number;
+  id: string;
+  name: string;
+  timestamp: number;
+  latest_job_id: string;
+  knowledgebase_id?: string;
 }
 
 /* ================= 组件 ================= */
@@ -176,18 +178,15 @@ const Chat: React.FC = () => {
   /* ======= 渲染 ======= */
   return (
     <div className="container">
-      <Sidebar
-        sessions={sessions}
-        activeSessionId={activeSessionId}
-        onSelectSession={(id) => navigate(`/chat/${id}`)}
-      />
+      <Sidebar />
 
       <div className="chat-container">
-        {/* 历史消息 */}
-        <SessionMessages sessionId={activeSessionId} />
-
-        {/* 实时消息 */}
+        {/* 消息列表 - 合并历史消息和实时消息 */}
         <div className="message-list">
+          {/* 历史消息 */}
+          <SessionMessages sessionId={activeSessionId} />
+          
+          {/* 实时消息 */}
           {messages.map(m => (
             <div key={m.id} className={`message ${m.sender}`}>
               <div className="bubble">
@@ -229,4 +228,3 @@ const Chat: React.FC = () => {
 };
 
 export default Chat;
-
